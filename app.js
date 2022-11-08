@@ -1,5 +1,10 @@
 const qrcode = require('qrcode-terminal');
 const { Client, Buttons } = require('whatsapp-web.js');
+var sessionStorage = require('sessionstorage');
+sessionStorage.setItem("level", 0);
+sessionStorage.setItem("option", '');
+const greetens = ['HOLA', 'HOLA, QUÉ TAL', 'HOLA QUE TAL', 'HOLA AMIGO'];
+const options = ['A', 'B', 'C']
 
 const client = new Client();
 
@@ -12,25 +17,69 @@ client.on('ready', () => {
 client.on('message', (message) => {
   const d = new Date();
   const hour = d.getHours();
-  if (hour < 13) {
+
+  if(hour < 13){
     client.sendMessage(message.from, 'No atendemos a esta hora');
   }
-  if (message.body == 'hola') {
-    // let button = new Buttons(
-    //   'Recuerda todo este contenido es gratis y estaria genial que me siguas!',
-    //   [{ body: 'Cursos' }, { body: 'Youtube' }, { body: 'Telegram' }],
-    //   '¿Que te interesa ver?',
-    //   'Gracias'
-    // );
-    // console.log(message, button);
-    // client.sendMessage(message.from, button);
-    client.sendMessage(message.from, 'escoge entre 1 o 2');
-  }
-  if (message.body == '1') {
-    client.sendMessage(message.from, 'uno uno');
-  }
-  if (message.body == '2') {
-    client.sendMessage(message.from, 'dos dos');
+  else{
+    switch(sessionStorage.getItem("level")){
+
+      case 0: 
+        if(greetens.includes(message.body.toLocaleUpperCase())){
+          client.sendMessage(message.from, 
+            `Hola, soy el tio Marco Agro de IBK 😀, puedo ayudarte en los siguientes temas
+
+          A) Tema uno
+          B) Tema dos
+          C) Tema tres
+        
+          Elige una de las opciones...🤔`);
+          sessionStorage.setItem("level", 1);
+        }
+        break;
+
+      case 1:
+        if(greetens.includes(message.body.toLocaleUpperCase())){
+          client.sendMessage(message.from, 
+            `Hola 😀, puedo ayudarte en los siguientes temas
+        
+          A) Tema uno
+          B) Tema dos
+          C) Tema tres
+        
+          Elige una de las opciones...🤔`);
+          sessionStorage.setItem("level", 1);
+        }
+        if(options.includes(message.body.toLocaleUpperCase())){
+          switch(message.body.toLocaleUpperCase()){
+            case 'A': client.sendMessage(message.from, `Información de la opción A`);
+                      client.sendMessage(message.from,'https://interbank.pe/');
+                      break;
+            case 'B': client.sendMessage(message.from, `Información de la opción B`);
+                      client.sendMessage(message.from,'https://interbank.pe/');
+                      break;
+            case 'C': client.sendMessage(message.from, `Información de la opción C`);
+                      client.sendMessage(message.from,'https://interbank.pe/');
+                      break;
+          }
+          sessionStorage.setItem("level", 2);
+        }
+        break;
+      
+      case 2: 
+        switch(sessionStorage('option')){
+          case 'A': client.sendMessage(message.from, `Información de la opción A`);
+                    client.sendMessage(message.from,'https://interbank.pe/');
+                    break;
+          case 'B': client.sendMessage(message.from, `Información de la opción B`);
+                    client.sendMessage(message.from,'https://interbank.pe/');
+                    break;
+          case 'C': client.sendMessage(message.from, `Información de la opción C`);
+                    client.sendMessage(message.from,'https://interbank.pe/');
+                    break;
+        }
+        break;
+    }
   }
 });
 client.initialize();
