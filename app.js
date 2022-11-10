@@ -24,52 +24,19 @@ client.on('ready', () => {
   //   })
   //   .start();
 });
-client.on('message', (msg) => {
+
+client.on('message', async (msg) => {
   const { from, body } = msg;
-  // if (from == 'status@broadcast' || from == '120363025006115402@g.us') {
-  //   return;
-  // }
-  //const date = new Date();
-  //const hour = date.getHours();
-  // if (hour < 13) {
-  //   const response = await sendMessage(
-  //     client,
-  //     from,
-  //     'No atendemos a esta hora'
-  //   );
-  //   const { status, message } = response;
-  //   console.log(message);
-  //    return
-  // }
-  if (body == 'a') {
-    // client.sendMessage(from, 'holaaaaa');
-    //console.log(stepsInitial[0].message.length);
-    // for (let i = 0; i < stepsInitial[0].message.length; i++) {
-    //   sendMessage(client, from, stepsInitial[0].message[i]);
-    // }
-    client.sendMessage(from, 'hola1');
-    client.sendMessage(from, 'hola2');
-    client.sendMessage(from, 'hola3');
-    // sendMedia(client, from, 'Anuncio_bienvenida.png');
-    // // await sendMedia(client, from, 'Anuncio_bienvenida.png');
-    // await sendMessage(client, from, 'hola2');
-    // await sendMessage(client, from, 'hola3');
-    // await sendMedia(client, from, 'Anuncio_bienvenida.png');
-    //const response3 = await sendMedia(client, from, 'Anuncio_bienvenida.png');
-    //const { message } = response3;
-    //console.log(message);
-    // let button = new Buttons(
-    //   'Button body',
-    //   [{ body: 'bt1' }, { body: 'bt2' }, { body: 'bt3' }],
-    //   'title',
-    //   'footer'
-    // );
-    // const messages = stepsInitial[0].message;
-    // console.log(messages);
-    // messages.map(async (e) => {
-    //   const a = await client.sendMessage(from, e);
-    // });
+  for (let i = 0; i < stepsInitial[0].message.length; i++) {
+    sendMessage(client, from, stepsInitial[0].message[i]);
+    await sleep(1000);
   }
+  await sleep(1000);
+  sendMedia(client, from, 'Anuncio_bienvenida.png');
 });
 
 client.initialize();
+
+function sleep(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
