@@ -5,7 +5,7 @@ const { sendMessage, sendMedia } = require('./controllers/send');
 const stepsInitial = require('./messages/initial.json');
 const cron = require('node-cron');
 
-const numbers = ['51958838270@c.us', '51943731086@c.us'];
+const numbers = ['51958838270@c.us', '51943731086@c.us', '51991310917@c.us', '51975348795@c.us', '51991692079@c.us'];
 const client = new Client({
   authStrategy: new LocalAuth({
     clientId: 'client-one',
