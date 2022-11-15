@@ -4,6 +4,7 @@ const { Client, LocalAuth } = require('whatsapp-web.js');
 const { sendMessage, sendMedia, sendButtons } = require('./controllers/send');
 const stepsInitial = require('./messages/initial.json');
 const cron = require('node-cron');
+var mysql = require('mysql');
 
 const numbers = ['51958838270@c.us'];
 
@@ -190,6 +191,21 @@ client.on('message', async (msg) => {
       from,
       '*¡Excelente!* 🙌  te agradeceríamos que nos dejes un comentario para mejorar poco a poco nuestro contenido.'
     );
+    
+    var con = mysql.createConnection({
+      host: "127.0.0.1",
+      user: "root",
+      password: "",
+      database: "bd_whatsapp"
+    });
+    con.connect(function(err) {
+      if (err) throw err;
+      var sql = "INSERT INTO calificacion (celular, calificacion, mensaje, fecha) VALUES ('"+from+"', "+body+", '', '"+new Date()+"')";
+      con.query(sql, function (err, result) {
+        if (err) throw err;
+        console.log("1 record inserted");
+      });
+    })
     await sleep(1000);
   }
 });
