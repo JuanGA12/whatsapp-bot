@@ -5,22 +5,22 @@ const { sendMessage, sendMedia, sendButtons } = require('./controllers/send');
 const stepsInitial = require('./messages/initial.json');
 const cron = require('node-cron');
 
-const numbers = [
-  '51959163747@c.us',
-  '51958838270@c.us',
-  '51991310917@c.us',
-  '51975348795@c.us',
-  '51991692079@c.us',
-  '51984112977@c.us',
-  '51941476428@c.us',
-  '51994712454@c.us',
-  '51992386664@c.us',
-];
+const numbers = ['51958838270@c.us'];
+
+// '51959163747@c.us',
+// '51991310917@c.us',
+// '51975348795@c.us',
+// '51991692079@c.us',
+// '51984112977@c.us',
+// '51941476428@c.us',
+// '51994712454@c.us',
+// '51992386664@c.us',
 const buttons = [
   { id: 'boton_si', body: 'SI' },
   { id: 'boton_no', body: 'NO' },
 ];
 const emojis = ['😍', '😀', '😐', '🙁', '😠'];
+const buttonText = '¿Te puedo ayudar en algo más?, presiona *SI* o *NO*.';
 const client = new Client({
   authStrategy: new LocalAuth({
     clientId: 'client-one',
@@ -34,94 +34,73 @@ client.on('qr', (qr) => {
 client.on('ready', () => {
   console.log('WHATSAPP WEB => Ready');
   const job1 = cron
-    .schedule('0 10 18 * * *', async () => {
+    .schedule('0 1 10 * * *', async () => {
       console.log('--------------------------');
       console.log('Job 1');
       numbers.map(async (number, idx) => {
         sendMedia(client, number, 'Anuncio_bienvenida.png');
-        await sleep(1000);
+        await sleep(2000);
         for (let i = 0; i < stepsInitial[0].message.length; i++) {
           sendMessage(client, number, stepsInitial[0].message[i]);
-          await sleep(1000);
+          await sleep(1500);
         }
-        sendButtons(
-          client,
-          number,
-          '¿Te puedo ayudar en algo más?, presiona SI o NO.',
-          buttons
-        );
-        await sleep(1000);
+        sendButtons(client, number, buttonText, buttons);
+        await sleep(2000);
       });
     })
     .start();
   const job2 = cron
-    .schedule('0 13 18 * * * ', async () => {
+    .schedule('0 16 10 * * *', async () => {
       console.log('--------------------------');
       console.log('Job 2');
       numbers.map(async (number, idx) => {
         for (let i = 0; i < stepsInitial[1].message.length; i++) {
           sendMessage(client, number, stepsInitial[1].message[i]);
-          await sleep(1000);
+          await sleep(1500);
         }
-        sendButtons(
-          client,
-          number,
-          '¿Te puedo ayudar en algo más?, presiona SI o NO.',
-          buttons
-        );
-        await sleep(1000);
+        sendButtons(client, number, buttonText, buttons);
+        await sleep(2000);
       });
     })
     .start();
   const job3 = cron
-    .schedule('0 16 18 * * *', async () => {
+    .schedule('10 19 10 * * *', async () => {
       console.log('--------------------------');
       console.log('Job 3');
       numbers.map(async (number, idx) => {
         for (let i = 0; i < stepsInitial[2].message.length; i++) {
           sendMessage(client, number, stepsInitial[2].message[i]);
-          await sleep(1000);
+          await sleep(1500);
         }
         await sleep(1000);
         sendMedia(
           client,
           number,
           'paso3.png',
-          'Y queremos que te sientas seguro utilizándola. Sigue estas recomendaciones.'
+          'Queremos que te sientas seguro usando tu tarjeta. ¡Sigue estas recomendaciones!'
         );
-        await sleep(1000);
-        sendButtons(
-          client,
-          number,
-          '¿Te puedo ayudar en algo más?, presiona SI o NO.',
-          buttons
-        );
-        await sleep(1000);
+        await sleep(2000);
+        sendButtons(client, number, buttonText, buttons);
+        await sleep(2000);
       });
     })
     .start();
   const job4 = cron
-    .schedule('0 19 18 * * *', async () => {
+    .schedule('10 27 10 * * *', async () => {
       console.log('--------------------------');
       console.log('Job 4');
       numbers.map(async (number, idx) => {
         for (let i = 0; i < stepsInitial[3].message.length; i++) {
           sendMessage(client, number, stepsInitial[3].message[i]);
-          await sleep(1000);
+          await sleep(1500);
         }
-
-        sendButtons(
-          client,
-          number,
-          '¿Te puedo ayudar en algo más?, presiona SI o NO.',
-          buttons
-        );
-        await sleep(1000);
+        sendButtons(client, number, buttonText, buttons);
+        await sleep(1500);
       });
     })
     .start();
   const job5 = cron
-    .schedule('0 21 18 * * *', async () => {
+    .schedule('59 39 10 * * *', async () => {
       console.log('--------------------------');
       console.log('Job 5');
       numbers.map(async (number, idx) => {
@@ -129,25 +108,20 @@ client.on('ready', () => {
           client,
           number,
           'Anuncio_pagar_servicio.png',
-          '¡Hola! 👋 ¡Recuerda que ya no es necesario que hagas cola para pagar tus recibos! Ahorra tiempo y recarga tu celular o paga tu luz, agua o teléfono desde la App Interbank.'
+          '¡Hola! 👋 ¡Recuerda que ahora puedes *aprovechar tu tiempo* porque ya no es necesario que hagas cola para pagar tus recibos! Ahorra tiempo y recarga tu celular o paga tu luz, agua o teléfono desde la App Interbank.'
         );
-        await sleep(1000);
+        await sleep(2000);
         for (let i = 0; i < stepsInitial[4].message.length; i++) {
           sendMessage(client, number, stepsInitial[4].message[i]);
-          await sleep(1000);
+          await sleep(1500);
         }
-        sendButtons(
-          client,
-          number,
-          '¿Te puedo ayudar en algo más?, presiona SI o NO.',
-          buttons
-        );
-        await sleep(1000);
+        sendButtons(client, number, buttonText, buttons);
+        await sleep(2000);
       });
     })
     .start();
   const job6 = cron
-    .schedule('0 23 18 * * *', async () => {
+    .schedule('30 45 10 * * *', async () => {
       console.log('--------------------------');
       console.log('Job 6');
       numbers.map(async (number, idx) => {
@@ -155,12 +129,7 @@ client.on('ready', () => {
           sendMessage(client, number, stepsInitial[5].message[i]);
           await sleep(1000);
         }
-        sendButtons(
-          client,
-          number,
-          '¿Te puedo ayudar en algo más?, presiona SI o NO.',
-          buttons
-        );
+        sendButtons(client, number, buttonText, buttons);
         await sleep(1000);
       });
     })
@@ -174,12 +143,7 @@ client.on('ready', () => {
           sendMessage(client, number, stepsInitial[6].message[i]);
           await sleep(1000);
         }
-        sendButtons(
-          client,
-          number,
-          '¿Te puedo ayudar en algo más?, presiona SI o NO.',
-          buttons
-        );
+        sendButtons(client, number, buttonText, buttons);
         await sleep(1000);
       });
     })
