@@ -6,8 +6,6 @@ const stepsInitial = require('./messages/initial.json');
 const cron = require('node-cron');
 const mysql = require('mysql');
 
-const numbers = ['51958838270@c.us', '51959163747@c.us'];
-
 // '51959163747@c.us',
 // '51991310917@c.us',
 // '51975348795@c.us',
@@ -31,7 +29,7 @@ const client = new Client();
 const con = mysql.createConnection({
   host: '127.0.0.1',
   user: 'root',
-  password: '',
+  password: '1234',
   database: 'bd_whatsapp',
 });
 
@@ -39,8 +37,20 @@ client.on('qr', (qr) => {
   qrcode.generate(qr, { small: true });
 });
 
-client.on('ready', () => {
+client.on('ready', async () => {
   console.log('WHATSAPP WEB => Ready');
+  const sql = 'SELECT celular FROM usuarios';
+  let numbers;
+  con.query(sql, function (err, result) {
+    if (err) {
+      console.log(err);
+    }
+    numbers = result.map((ele) => {
+      return ele.celular + '@c.us';
+    });
+  });
+  await sleep(2000);
+
   const job1 = cron
     .schedule('0 06 13 * * *', async () => {
       console.log('--------------------------');
@@ -54,14 +64,12 @@ client.on('ready', () => {
         }
         sendButtons(client, number, buttonText, buttons);
         await sleep(2000);
-        const sql =
-          "INSERT INTO usuarios (celular, fase) VALUES ('" +
-          number +
-          "', " +
-          "'Fase1')";
+        const sql = `UPDATE usuarios SET fase = 'Fase1' WHERE celular = ${
+          number.split('@')[0]
+        }`;
         con.query(sql, function (err, result) {
           if (err) throw err;
-          console.log('Usuario' + number + ' insertado a la base de datos');
+          console.log('Usuario' + number + ' actulizado a fase 1');
         });
         await sleep(2000);
       });
@@ -78,7 +86,9 @@ client.on('ready', () => {
         }
         sendButtons(client, number, buttonText, buttons);
         await sleep(2000);
-        const sql = `UPDATE usuarios SET fase = 'Fase2' WHERE celular = ${number}`;
+        const sql = `UPDATE usuarios SET fase = 'Fase2' WHERE celular = ${
+          number.split('@')[0]
+        }`;
         con.query(sql, function (err, result) {
           if (err) throw err;
           console.log('Usuario' + number + ' actulizado a fase 2');
@@ -106,7 +116,9 @@ client.on('ready', () => {
         await sleep(2000);
         sendButtons(client, number, buttonText, buttons);
         await sleep(2000);
-        const sql = `UPDATE usuarios SET fase = 'Fase3' WHERE celular = ${number}`;
+        const sql = `UPDATE usuarios SET fase = 'Fase3' WHERE celular = ${
+          number.split('@')[0]
+        }`;
         con.query(sql, function (err, result) {
           if (err) throw err;
           console.log('Usuario' + number + ' actulizado a fase 3');
@@ -126,7 +138,9 @@ client.on('ready', () => {
         }
         sendButtons(client, number, buttonText, buttons);
         await sleep(1500);
-        const sql = `UPDATE usuarios SET fase = 'Fase4' WHERE celular = ${number}`;
+        const sql = `UPDATE usuarios SET fase = 'Fase4' WHERE celular = ${
+          number.split('@')[0]
+        }`;
         con.query(sql, function (err, result) {
           if (err) throw err;
           console.log('Usuario' + number + ' actulizado a fase 4');
@@ -153,7 +167,9 @@ client.on('ready', () => {
         }
         sendButtons(client, number, buttonText, buttons);
         await sleep(2000);
-        const sql = `UPDATE usuarios SET fase = 'Fase5' WHERE celular = ${number}`;
+        const sql = `UPDATE usuarios SET fase = 'Fase5' WHERE celular = ${
+          number.split('@')[0]
+        }`;
         con.query(sql, function (err, result) {
           if (err) throw err;
           console.log('Usuario' + number + ' actulizado a fase 5');
@@ -173,7 +189,9 @@ client.on('ready', () => {
         }
         sendButtons(client, number, buttonText, buttons);
         await sleep(1000);
-        const sql = `UPDATE usuarios SET fase = 'Fase6' WHERE celular = ${number}`;
+        const sql = `UPDATE usuarios SET fase = 'Fase6' WHERE celular = ${
+          number.split('@')[0]
+        }`;
         con.query(sql, function (err, result) {
           if (err) throw err;
           console.log('Usuario' + number + ' actulizado a fase 6');
@@ -193,7 +211,9 @@ client.on('ready', () => {
         }
         sendButtons(client, number, buttonText, buttons);
         await sleep(1000);
-        const sql = `UPDATE usuarios SET fase = 'Fase7' WHERE celular = '${number}'`;
+        const sql = `UPDATE usuarios SET fase = 'Fase7' WHERE celular = '${
+          number.split('@')[0]
+        }'`;
         con.query(sql, function (err, result) {
           if (err) throw err;
           console.log('Usuario' + number + ' actulizado a fase 7');
@@ -213,7 +233,9 @@ client.on('ready', () => {
           sendMessage(client, number, stepsInitial[7].message[i]);
           await sleep(1000);
         }
-        const sql = `UPDATE usuarios SET fase = 'Fase8' WHERE celular = ${number}`;
+        const sql = `UPDATE usuarios SET fase = 'Fase8' WHERE celular = ${
+          number.split('@')[0]
+        }`;
         con.query(sql, function (err, result) {
           if (err) throw err;
           console.log('Usuario' + number + ' actulizado a fase 8');
@@ -222,24 +244,29 @@ client.on('ready', () => {
       });
     })
     .start();
+  const getChats = cron
+    .schedule('0 28 18 * * *', async () => {
+      console.log('--------------------------');
+      console.log('Getting Chats');
+    })
+    .start();
 });
 
 client.on('message', async (msg) => {
-  await sleep(2000);
   const { from, body, selectedButtonId } = msg;
-
-  const sql = `SELECT fase FROM usuarios where celular = ${from}`;
-  let response;
-  con.query(sql, function (err, result) {
-    if (err) throw err;
-    response = result;
-    console.log(response);
-  });
-
   if (from == 'status@broadcast') {
     return;
   }
-
+  const sql = `SELECT fase FROM usuarios where celular = ${from.split('@')[0]}`;
+  let fase;
+  con.query(sql, function (err, result) {
+    if (err) {
+      console.log(err);
+    }
+    fase = result.map((ele) => ele.fase)[0];
+  });
+  await sleep(2000);
+  console.log(fase);
   if (body == 'SI' && selectedButtonId == 'boton_si') {
     true;
     sendMessage(
@@ -260,7 +287,7 @@ client.on('message', async (msg) => {
     sendMessage(client, from, 'Ok, ¡hasta luego! 😊');
     await sleep(1000);
   }
-  if ((body >= 1 && body <= 5) || emojis.includes(body)) {
+  if (fase == 'Fase5' && ((body >= 1 && body <= 5) || emojis.includes(body))) {
     sendMessage(
       client,
       from,
@@ -282,24 +309,6 @@ client.on('disconnected', (reason) => {
 });
 client.initialize();
 
-/*
-{
-  if (err) throw err;
-  var sql =
-    "INSERT INTO calificacion (celular, calificacion, mensaje, fecha) VALUES ('" +
-    from +
-    "', " +
-    body +
-    ", '', '" +
-    new Date() +
-    "')";
-  con.query(sql, function (err, result) {
-    if (err) throw err;
-    console.log('1 record inserted');
-  });
-}
-
-*/
 function sleep(ms) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
