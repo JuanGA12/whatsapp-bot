@@ -6,7 +6,7 @@ const stepsInitial = require('./messages/initial.json');
 const cron = require('node-cron');
 const mysql = require('mysql');
 
-const numbers = ['51958838270@c.us'];
+const numbers = ['51958838270@c.us', '51959163747@c.us'];
 
 // '51959163747@c.us',
 // '51991310917@c.us',
@@ -42,7 +42,7 @@ client.on('qr', (qr) => {
 client.on('ready', () => {
   console.log('WHATSAPP WEB => Ready');
   const job1 = cron
-    .schedule('0 1 10 * * *', async () => {
+    .schedule('0 06 13 * * *', async () => {
       console.log('--------------------------');
       console.log('Job 1');
       numbers.map(async (number, idx) => {
@@ -58,7 +58,7 @@ client.on('ready', () => {
           "INSERT INTO usuarios (celular, fase) VALUES ('" +
           number +
           "', " +
-          "Fase1')";
+          "'Fase1')";
         con.query(sql, function (err, result) {
           if (err) throw err;
           console.log('Usuario' + number + ' insertado a la base de datos');
@@ -193,7 +193,7 @@ client.on('ready', () => {
         }
         sendButtons(client, number, buttonText, buttons);
         await sleep(1000);
-        const sql = `UPDATE usuarios SET fase = 'Fase7' WHERE celular = ${number}`;
+        const sql = `UPDATE usuarios SET fase = 'Fase7' WHERE celular = '${number}'`;
         con.query(sql, function (err, result) {
           if (err) throw err;
           console.log('Usuario' + number + ' actulizado a fase 7');
@@ -233,6 +233,7 @@ client.on('message', async (msg) => {
   con.query(sql, function (err, result) {
     if (err) throw err;
     response = result;
+    console.log(response);
   });
 
   if (from == 'status@broadcast') {
