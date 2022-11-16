@@ -1,10 +1,10 @@
 // const fs = require('fs');
 const qrcode = require('qrcode-terminal');
-const { Client, LocalAuth } = require('whatsapp-web.js');
+const { Client, LocalAuth, Chat } = require('whatsapp-web.js');
 const { sendMessage, sendMedia, sendButtons } = require('./controllers/send');
 const stepsInitial = require('./messages/initial.json');
 const cron = require('node-cron');
-var mysql = require('mysql');
+const mysql = require('mysql');
 
 const numbers = ['51958838270@c.us'];
 
@@ -22,10 +22,17 @@ const buttons = [
 ];
 const emojis = ['😍', '😀', '😐', '🙁', '😠'];
 const buttonText = '¿Te puedo ayudar en algo más?, presiona *SI* o *NO*.';
-const client = new Client({
+const client = new Client();
+/**{
   authStrategy: new LocalAuth({
     clientId: 'client-one',
   }),
+} */
+const con = mysql.createConnection({
+  host: '127.0.0.1',
+  user: 'root',
+  password: '',
+  database: 'bd_whatsapp',
 });
 
 client.on('qr', (qr) => {
@@ -47,6 +54,16 @@ client.on('ready', () => {
         }
         sendButtons(client, number, buttonText, buttons);
         await sleep(2000);
+        const sql =
+          "INSERT INTO usuarios (celular, fase) VALUES ('" +
+          number +
+          "', " +
+          "Fase1')";
+        con.query(sql, function (err, result) {
+          if (err) throw err;
+          console.log('Usuario' + number + ' insertado a la base de datos');
+        });
+        await sleep(2000);
       });
     })
     .start();
@@ -60,6 +77,12 @@ client.on('ready', () => {
           await sleep(1500);
         }
         sendButtons(client, number, buttonText, buttons);
+        await sleep(2000);
+        const sql = `UPDATE usuarios SET fase = 'Fase2' WHERE celular = ${number}`;
+        con.query(sql, function (err, result) {
+          if (err) throw err;
+          console.log('Usuario' + number + ' actulizado a fase 2');
+        });
         await sleep(2000);
       });
     })
@@ -83,6 +106,12 @@ client.on('ready', () => {
         await sleep(2000);
         sendButtons(client, number, buttonText, buttons);
         await sleep(2000);
+        const sql = `UPDATE usuarios SET fase = 'Fase3' WHERE celular = ${number}`;
+        con.query(sql, function (err, result) {
+          if (err) throw err;
+          console.log('Usuario' + number + ' actulizado a fase 3');
+        });
+        await sleep(2000);
       });
     })
     .start();
@@ -97,6 +126,12 @@ client.on('ready', () => {
         }
         sendButtons(client, number, buttonText, buttons);
         await sleep(1500);
+        const sql = `UPDATE usuarios SET fase = 'Fase4' WHERE celular = ${number}`;
+        con.query(sql, function (err, result) {
+          if (err) throw err;
+          console.log('Usuario' + number + ' actulizado a fase 4');
+        });
+        await sleep(2000);
       });
     })
     .start();
@@ -118,6 +153,12 @@ client.on('ready', () => {
         }
         sendButtons(client, number, buttonText, buttons);
         await sleep(2000);
+        const sql = `UPDATE usuarios SET fase = 'Fase5' WHERE celular = ${number}`;
+        con.query(sql, function (err, result) {
+          if (err) throw err;
+          console.log('Usuario' + number + ' actulizado a fase 5');
+        });
+        await sleep(2000);
       });
     })
     .start();
@@ -132,6 +173,12 @@ client.on('ready', () => {
         }
         sendButtons(client, number, buttonText, buttons);
         await sleep(1000);
+        const sql = `UPDATE usuarios SET fase = 'Fase6' WHERE celular = ${number}`;
+        con.query(sql, function (err, result) {
+          if (err) throw err;
+          console.log('Usuario' + number + ' actulizado a fase 6');
+        });
+        await sleep(2000);
       });
     })
     .start();
@@ -146,6 +193,12 @@ client.on('ready', () => {
         }
         sendButtons(client, number, buttonText, buttons);
         await sleep(1000);
+        const sql = `UPDATE usuarios SET fase = 'Fase7' WHERE celular = ${number}`;
+        con.query(sql, function (err, result) {
+          if (err) throw err;
+          console.log('Usuario' + number + ' actulizado a fase 7');
+        });
+        await sleep(2000);
       });
     })
     .start();
@@ -160,23 +213,44 @@ client.on('ready', () => {
           sendMessage(client, number, stepsInitial[7].message[i]);
           await sleep(1000);
         }
+        const sql = `UPDATE usuarios SET fase = 'Fase8' WHERE celular = ${number}`;
+        con.query(sql, function (err, result) {
+          if (err) throw err;
+          console.log('Usuario' + number + ' actulizado a fase 8');
+        });
+        await sleep(2000);
       });
     })
     .start();
 });
 
 client.on('message', async (msg) => {
+  await sleep(2000);
   const { from, body, selectedButtonId } = msg;
+
+  const sql = `SELECT fase FROM usuarios where celular = ${from}`;
+  let response;
+  con.query(sql, function (err, result) {
+    if (err) throw err;
+    response = result;
+  });
+
   if (from == 'status@broadcast') {
     return;
   }
+
   if (body == 'SI' && selectedButtonId == 'boton_si') {
-    sendMessage(client, from, 'Si tienes alguna duda, escríbenos por aquí 👇');
+    true;
+    sendMessage(
+      client,
+      from,
+      'Qué bueno que te haya servido la información. Si tienes alguna pregunta escríbenos por este medio'
+    );
     await sleep(1000);
     sendMessage(
       client,
       from,
-      'Recuerda que te atenderemos en nuestro horario de lunes a viernes 9 a 6 pm.'
+      'Lamentamos que la información no haya sito de tu utilidad. Si tienes alguna pregunta escríbenos por este medio'
     );
     await sleep(1000);
   }
@@ -191,26 +265,15 @@ client.on('message', async (msg) => {
       from,
       '*¡Excelente!* 🙌  te agradeceríamos que nos dejes un comentario para mejorar poco a poco nuestro contenido.'
     );
-    
-    var con = mysql.createConnection({
-      host: "127.0.0.1",
-      user: "root",
-      password: "",
-      database: "bd_whatsapp"
-    });
-    con.connect(function(err) {
-      if (err) throw err;
-      var sql = "INSERT INTO calificacion (celular, calificacion, mensaje, fecha) VALUES ('"+from+"', "+body+", '', '"+new Date()+"')";
-      con.query(sql, function (err, result) {
-        if (err) throw err;
-        console.log("1 record inserted");
-      });
-    })
     await sleep(1000);
   }
 });
 client.on('authenticated', (session) => {
   console.log('WHATSAPP WEB => Authenticated');
+  con.connect(function (err) {
+    if (err) throw err;
+    console.log('Database Connected!');
+  });
 });
 client.on('disconnected', (reason) => {
   console.log('WHATSAPP WEB => Disconnected');
@@ -218,6 +281,24 @@ client.on('disconnected', (reason) => {
 });
 client.initialize();
 
+/*
+{
+  if (err) throw err;
+  var sql =
+    "INSERT INTO calificacion (celular, calificacion, mensaje, fecha) VALUES ('" +
+    from +
+    "', " +
+    body +
+    ", '', '" +
+    new Date() +
+    "')";
+  con.query(sql, function (err, result) {
+    if (err) throw err;
+    console.log('1 record inserted');
+  });
+}
+
+*/
 function sleep(ms) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
