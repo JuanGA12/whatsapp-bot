@@ -29,7 +29,7 @@ const client = new Client();
 const con = mysql.createConnection({
   host: '127.0.0.1',
   user: 'root',
-  password: '1234',
+  password: '',
   database: 'bd_whatsapp',
 });
 
