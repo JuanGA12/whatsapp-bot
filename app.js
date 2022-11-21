@@ -19,7 +19,7 @@ const buttons = [
   { id: 'boton_no', body: 'NO' },
 ];
 const emojis = ['😍', '😀', '😐', '🙁', '😠'];
-const buttonText = '¿Te puedo ayudar en algo más?, presiona *SI* o *NO*.';
+const buttonText = '¿Te resultó útil esta información? Presiona *SI* o *NO*';
 const client = new Client();
 /**{
   authStrategy: new LocalAuth({
@@ -56,7 +56,19 @@ client.on('ready', async () => {
       console.log('--------------------------');
       console.log('Job 1');
       numbers.map(async (number, idx) => {
-        sendMedia(client, number, 'Anuncio_bienvenida.png');
+        sendMedia(
+          client,
+          number,
+          'chicho_agro_bienvenida.png',
+          '¡Felicidades por activar tu *tarjeta digital* Interbank! 🥳'
+        );
+        await sleep(2000);
+        sendMedia(
+          client,
+          number,
+          'chicho_agro_antesydespues.png',
+          '¡La tarjeta digital te permite comprar, sacar dinero y pagar desde tu celular sin costo adicional. Ahora podrás utilizar tu dinero *sin ir a la Tienda a recoger una tarjeta física* 💳 y aprovechar tu tiempo en lo que tú quieras 😉.\n\nPodrás usar tu sueldo y hacer todas tus operaciones utilizando la *app Interbank* 📱'
+        );
         await sleep(2000);
         for (let i = 0; i < stepsInitial[0].message.length; i++) {
           sendMessage(client, number, stepsInitial[0].message[i]);
@@ -80,6 +92,19 @@ client.on('ready', async () => {
       console.log('--------------------------');
       console.log('Job 2');
       numbers.map(async (number, idx) => {
+        sendMessage(
+          client,
+          number,
+          '¡Hola! 👋 ¡*Hoy te pagarán tu 1er sueldo* en Hortifrut! Ahora que tienes tu cuenta sueldo y tarjeta digital, ¿ya sabes *cómo sacar tu dinero SIN tarjeta* 💵 en el agente Interbank o cajero GlobalNet más cercano? 🤔'
+        );
+        await sleep(1500);
+        sendMedia(
+          client,
+          number,
+          'chicho_agro_retirosintarjeta.png',
+          'Descubre cómo sacar dinero sin tarjeta en esta imagen o sigue estos pasos:\n1. Ingresa a tu app 📱 y selecciona *Operaciones*, ubicado en la parte inferior\n2. Elige *Retiro sin tarjeta*\n3. Selecciona *Para mí*\n5. Selecciona la *cuenta de retiro* (de dónde sale el dinero), la *moneda* e ingresa el *monto*\n6. Ingresa la clave que te enviaremos, *confirma*, ¡y listo! 🤩'
+        );
+        await sleep(2000);
         for (let i = 0; i < stepsInitial[1].message.length; i++) {
           sendMessage(client, number, stepsInitial[1].message[i]);
           await sleep(1500);
@@ -107,12 +132,7 @@ client.on('ready', async () => {
           await sleep(1500);
         }
         await sleep(1000);
-        sendMedia(
-          client,
-          number,
-          'paso3.png',
-          'Queremos que te sientas seguro usando tu tarjeta. ¡Sigue estas recomendaciones!'
-        );
+        sendMedia(client, number, 'chicho_agro_cuidamostutarjeta.png');
         await sleep(2000);
         sendButtons(client, number, buttonText, buttons);
         await sleep(2000);
@@ -136,6 +156,13 @@ client.on('ready', async () => {
           sendMessage(client, number, stepsInitial[3].message[i]);
           await sleep(1500);
         }
+        sendMedia(
+          client,
+          number,
+          'chicho_agro_transferenciaplin.png',
+          '¿Necesitas enviar dinero a otra persona? Descubre cómo plinear en esta imagen o sigue estos pasos:\n1. Ingresa a tu app 📱 y selecciona *Operaciones*, ubicado en la parte inferior\n2. Selecciona *Pago a contacto*. Si es la primera vez que usas PLIN, enlaza tu cuenta sueldo\n3. Activa el permiso para ver tus contactos de celular\n4. Elige *a quién pagar* e ingresa el *monto*\n5. *Confirma* con la clave que te enviamos ¡y listo!\n\n☝ Recuerda que para hacer una transferencia de dinero PLIN tu contacto de destino también debe tener PLIN.'
+        );
+        await sleep(2000);
         sendButtons(client, number, buttonText, buttons);
         await sleep(1500);
         const sql = `UPDATE usuarios SET fase = 'Fase4' WHERE celular = ${
@@ -154,17 +181,17 @@ client.on('ready', async () => {
       console.log('--------------------------');
       console.log('Job 5');
       numbers.map(async (number, idx) => {
-        sendMedia(
-          client,
-          number,
-          'Anuncio_pagar_servicio.png',
-          '¡Hola! 👋 ¡Recuerda que ahora puedes *aprovechar tu tiempo* porque ya no es necesario que hagas cola para pagar tus recibos! Ahorra tiempo y recarga tu celular o paga tu luz, agua o teléfono desde la App Interbank.'
-        );
-        await sleep(2000);
         for (let i = 0; i < stepsInitial[4].message.length; i++) {
           sendMessage(client, number, stepsInitial[4].message[i]);
           await sleep(1500);
         }
+        sendMedia(
+          client,
+          number,
+          'chicho_agro_qrplin.png',
+          'Descubre cómo pagar con QR en esta imagen o sigue estos pasos:\n1. Pregúntale al bodeguero si tiene QR\n2. Ingresa a tu app 📱 y selecciona *Operaciones*, ubicado en la parte inferior\n3. Selecciona *Pago con QR*\n4. Enciende la cámara de tu celular y enfoca el *código QR*\n5. Escribe el *monto* que quieres pagar'
+        );
+        await sleep(2000);
         sendButtons(client, number, buttonText, buttons);
         await sleep(2000);
         const sql = `UPDATE usuarios SET fase = 'Fase5' WHERE celular = ${
@@ -179,7 +206,7 @@ client.on('ready', async () => {
     })
     .start();
   const job6 = cron
-    .schedule('30 45 10 * * *', async () => {
+    .schedule('30 45 15 * * *', async () => {
       console.log('--------------------------');
       console.log('Job 6');
       numbers.map(async (number, idx) => {
@@ -187,6 +214,13 @@ client.on('ready', async () => {
           sendMessage(client, number, stepsInitial[5].message[i]);
           await sleep(1000);
         }
+        sendMedia(
+          client,
+          number,
+          'chicho_agro_pagoservicios.png',
+          'Descubre cómo pagar recibos y recargar el saldo de tu celular en esta imagen o sigue estos pasos:\n1. Ingresa a tu app 📱 y selecciona *Operaciones*, ubicado en la parte inferior\n2. Elige la opción *Pagos y recargas* y luego *Recarga de celular* o *Pago de servicios* según lo que quieras realizar\n3. Completa la información, ¡y listo!'
+        );
+        await sleep(2000);
         sendButtons(client, number, buttonText, buttons);
         await sleep(1000);
         const sql = `UPDATE usuarios SET fase = 'Fase6' WHERE celular = ${
@@ -209,6 +243,13 @@ client.on('ready', async () => {
           sendMessage(client, number, stepsInitial[6].message[i]);
           await sleep(1000);
         }
+        sendMedia(
+          client,
+          number,
+          'chicho_agro_transferenciaapp.png',
+          'Descubre cómo enviar dinero en esta imagen o sigue estos pasos:\n1. Ingresa a tu app 📱 y selecciona *Operaciones*, ubicado en la parte inferior\n2. Elige *Transferencias* y luego *A otra cuenta Interbank* o *A otro banco* según el tipo de transferencia que quieras realizar\n3.Selecciona la * cuenta de cargo * (de dónde sale el dinero) e ingresa el número  o CCI de la * cuenta de destino * (a dónde va el dinero) \n4.Elige la * moneda * y el * monto *\n5.Ingresa la clave que te enviaremos y * confirma * '
+        );
+        await sleep(2000);
         sendButtons(client, number, buttonText, buttons);
         await sleep(1000);
         const sql = `UPDATE usuarios SET fase = 'Fase7' WHERE celular = '${
@@ -227,13 +268,40 @@ client.on('ready', async () => {
       console.log('--------------------------');
       console.log('Job 8');
       numbers.map(async (number, idx) => {
-        sendMedia(client, number, 'f.png');
+        sendMessage(
+          client,
+          number,
+          '¡Hola! 👋 ¿Sabes dónde se encuentra el agente, cajero o Tienda Interbank más cercano a ti? 💚 Revísalo aquí: https://interbank.pe/puntos-de-atencion'
+        );
         await sleep(1000);
+        const sql = `UPDATE usuarios SET fase = 'Fase8' WHERE celular = ${
+          number.split('@')[0]
+        }`;
+        con.query(sql, function (err, result) {
+          if (err) throw err;
+          console.log('Usuario' + number + ' actulizado a fase 8');
+        });
+        await sleep(2000);
+      });
+    })
+    .start();
+  const job9 = cron
+    .schedule('0 28 18 * * *', async () => {
+      console.log('--------------------------');
+      console.log('Job 8');
+      numbers.map(async (number, idx) => {
+        sendMedia(
+          client,
+          number,
+          'chicho_agro_despedida.png',
+          '¡Felicitaciones! llegaste al final de nuestra travesía 💚 Ahora eres experto en usar tu nueva Tarjeta Digital 💳 y algunos conceptos del mundo bancario 😎. Fue sencillo, ¿verdad? 😊'
+        );
+        await sleep(2000);
         for (let i = 0; i < stepsInitial[7].message.length; i++) {
           sendMessage(client, number, stepsInitial[7].message[i]);
           await sleep(1000);
         }
-        const sql = `UPDATE usuarios SET fase = 'Fase8' WHERE celular = ${
+        const sql = `UPDATE usuarios SET fase = 'Fase9' WHERE celular = ${
           number.split('@')[0]
         }`;
         con.query(sql, function (err, result) {
@@ -266,40 +334,40 @@ client.on('message', async (msg) => {
     fase = result.map((ele) => ele.fase)[0];
   });
   await sleep(2000);
-  console.log(fase);
   if (body == 'SI' && selectedButtonId == 'boton_si') {
-    true;
     sendMessage(
       client,
       from,
-      'Qué bueno que te haya servido la información. Si tienes alguna pregunta escríbenos por este medio'
-    );
-    await sleep(1000);
-    sendMessage(
-      client,
-      from,
-      'Lamentamos que la información no haya sito de tu utilidad. Si tienes alguna pregunta escríbenos por este medio'
+      '¡Qué bueno que te haya servido la información! 🤩 Si tienes alguna pregunta, escríbenos por este medio.'
     );
     await sleep(1000);
   }
 
   if (body == 'NO' && selectedButtonId == 'boton_no') {
-    sendMessage(client, from, 'Ok, ¡hasta luego! 😊');
+    sendMessage(
+      client,
+      from,
+      'Lamentamos que la información no haya sito de tu utilidad. 🙁 Si tienes alguna pregunta, escríbenos por este medio.'
+    );
     await sleep(1000);
   }
-  if (fase == 'Fase5' && ((body >= 1 && body <= 5) || emojis.includes(body))) {
+  if (fase == 'Fase9' && ((body >= 1 && body <= 5) || emojis.includes(body))) {
     sendMessage(
       client,
       from,
       '*¡Excelente!* 🙌  te agradeceríamos que nos dejes un comentario para mejorar poco a poco nuestro contenido.'
     );
+    //Se podria cambiar a fase6 para que no envie mensaje si hay un 1---5 o emoji
     await sleep(1000);
   }
 });
 client.on('authenticated', (session) => {
   console.log('WHATSAPP WEB => Authenticated');
   con.connect(function (err) {
-    if (err) throw err;
+    if (err) {
+      client.logout();
+      throw err;
+    }
     console.log('Database Connected!');
   });
 });
@@ -312,3 +380,14 @@ client.initialize();
 function sleep(ms) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
+const getChatById = async (number, client) => {
+  const chat = await client.getChatById(from);
+  const chats = await chat.fetchMessages();
+  chats.map((chat) => {
+    const { timestamp, body, from } = chat;
+    console.log('De', from);
+    console.log('Mensaje', body);
+    console.log('Hora', timestamp);
+    console.log('******************************');
+  });
+};
