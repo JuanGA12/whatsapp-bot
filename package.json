@@ -9,6 +9,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "excel4node": "^1.8.0",
     "mysql": "^2.18.1",
     "node-cron": "^3.0.2",
     "qrcode-terminal": "^0.12.0",

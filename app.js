@@ -2,6 +2,7 @@
 const qrcode = require('qrcode-terminal');
 const { Client, LocalAuth, Chat } = require('whatsapp-web.js');
 const { sendMessage, sendMedia, sendButtons } = require('./controllers/send');
+const { saveChat } = require('./controllers/saveChat');
 const stepsInitial = require('./messages/initial.json');
 const cron = require('node-cron');
 const mysql = require('mysql');
@@ -39,6 +40,7 @@ client.on('qr', (qr) => {
 
 client.on('ready', async () => {
   console.log('WHATSAPP WEB => Ready');
+  await getChatById('51958838270@c.us', client);
   const sql = 'SELECT celular FROM usuarios';
   let numbers;
   con.query(sql, function (err, result) {
@@ -247,7 +249,7 @@ client.on('ready', async () => {
           client,
           number,
           'chicho_agro_transferenciaapp.png',
-          'Descubre cómo enviar dinero en esta imagen o sigue estos pasos:\n1. Ingresa a tu app 📱 y selecciona *Operaciones*, ubicado en la parte inferior\n2. Elige *Transferencias* y luego *A otra cuenta Interbank* o *A otro banco* según el tipo de transferencia que quieras realizar\n3.Selecciona la * cuenta de cargo * (de dónde sale el dinero) e ingresa el número  o CCI de la * cuenta de destino * (a dónde va el dinero) \n4.Elige la * moneda * y el * monto *\n5.Ingresa la clave que te enviaremos y * confirma * '
+          'Descubre cómo enviar dinero en esta imagen o sigue estos pasos:\n1. Ingresa a tu app 📱 y selecciona *Operaciones*, ubicado en la parte inferior\n2. Elige *Transferencias* y luego *A otra cuenta Interbank* o *A otro banco* según el tipo de transferencia que quieras realizar\n3.Selecciona la *cuenta de cargo* (de dónde sale el dinero) e ingresa el número  o CCI de la *cuenta de destino* (a dónde va el dinero) \n4.Elige la *moneda* y el *monto*\n5.Ingresa la clave que te enviaremos y *confirma*'
         );
         await sleep(2000);
         sendButtons(client, number, buttonText, buttons);
@@ -310,12 +312,6 @@ client.on('ready', async () => {
         });
         await sleep(2000);
       });
-    })
-    .start();
-  const getChats = cron
-    .schedule('0 28 18 * * *', async () => {
-      console.log('--------------------------');
-      console.log('Getting Chats');
     })
     .start();
 });
@@ -381,13 +377,11 @@ function sleep(ms) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 const getChatById = async (number, client) => {
-  const chat = await client.getChatById(from);
+  const chat = await client.getChatById(number);
   const chats = await chat.fetchMessages();
-  chats.map((chat) => {
+  const newchats = chats.map((chat) => {
     const { timestamp, body, from } = chat;
-    console.log('De', from);
-    console.log('Mensaje', body);
-    console.log('Hora', timestamp);
-    console.log('******************************');
+    return { timestamp, body, from };
   });
+  await saveChat(newchats);
 };
