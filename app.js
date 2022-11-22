@@ -52,7 +52,7 @@ client.on('ready', async () => {
   await sleep(2000);
 
   const job1 = cron
-    .schedule('0 06 13 * * *', async () => {
+    .schedule('0 0 16 * * *', async () => {
       console.log('--------------------------');
       console.log('Job 1');
       numbers.map(async (number, idx) => {
@@ -88,7 +88,7 @@ client.on('ready', async () => {
     })
     .start();
   const job2 = cron
-    .schedule('0 16 10 * * *', async () => {
+    .schedule('0 05 16 * * *', async () => {
       console.log('--------------------------');
       console.log('Job 2');
       numbers.map(async (number, idx) => {
@@ -123,7 +123,7 @@ client.on('ready', async () => {
     })
     .start();
   const job3 = cron
-    .schedule('10 19 10 * * *', async () => {
+    .schedule('0 10 16 * * *', async () => {
       console.log('--------------------------');
       console.log('Job 3');
       numbers.map(async (number, idx) => {
@@ -148,7 +148,7 @@ client.on('ready', async () => {
     })
     .start();
   const job4 = cron
-    .schedule('10 27 10 * * *', async () => {
+    .schedule('0 15 16 * * *', async () => {
       console.log('--------------------------');
       console.log('Job 4');
       numbers.map(async (number, idx) => {
@@ -177,7 +177,7 @@ client.on('ready', async () => {
     })
     .start();
   const job5 = cron
-    .schedule('59 39 10 * * *', async () => {
+    .schedule('0 20 16 * * *', async () => {
       console.log('--------------------------');
       console.log('Job 5');
       numbers.map(async (number, idx) => {
@@ -206,7 +206,7 @@ client.on('ready', async () => {
     })
     .start();
   const job6 = cron
-    .schedule('30 45 15 * * *', async () => {
+    .schedule('0 25 16 * * *', async () => {
       console.log('--------------------------');
       console.log('Job 6');
       numbers.map(async (number, idx) => {
@@ -235,7 +235,7 @@ client.on('ready', async () => {
     })
     .start();
   const job7 = cron
-    .schedule('0 26 18 * * *', async () => {
+    .schedule('0 30 16 * * *', async () => {
       console.log('--------------------------');
       console.log('Job 7');
       numbers.map(async (number, idx) => {
@@ -264,7 +264,7 @@ client.on('ready', async () => {
     })
     .start();
   const job8 = cron
-    .schedule('0 28 18 * * *', async () => {
+    .schedule('0 35 16 * * *', async () => {
       console.log('--------------------------');
       console.log('Job 8');
       numbers.map(async (number, idx) => {
@@ -286,7 +286,7 @@ client.on('ready', async () => {
     })
     .start();
   const job9 = cron
-    .schedule('0 28 18 * * *', async () => {
+    .schedule('0 40 16 * * *', async () => {
       console.log('--------------------------');
       console.log('Job 8');
       numbers.map(async (number, idx) => {
