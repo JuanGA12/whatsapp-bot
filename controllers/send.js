@@ -12,13 +12,18 @@ const sendMessage = (client, number = null, text = null) => {
   }
 };
 
-const sendMedia = (client, number = null, fileName = null, caption = null) => {
+const sendMedia = async (
+  client,
+  number = null,
+  fileName = null,
+  caption = null
+) => {
   if (!client) return console.error('El objeto cliente no está definido.');
   try {
     const file = `${DIR_MEDIA}/${fileName}`;
     if (fs.existsSync(file)) {
       const media = MessageMedia.fromFilePath(file);
-      client.sendMessage(number, media, {
+      await client.sendMessage(number, media, {
         sendAudioAsVoice: true,
         caption: caption ? caption : '',
       });
