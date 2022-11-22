@@ -6,15 +6,6 @@ const { saveChat } = require('./controllers/saveChat');
 const stepsInitial = require('./messages/initial.json');
 const cron = require('node-cron');
 const mysql = require('mysql');
-
-// '51959163747@c.us',
-// '51991310917@c.us',
-// '51975348795@c.us',
-// '51991692079@c.us',
-// '51984112977@c.us',
-// '51941476428@c.us',
-// '51994712454@c.us',
-// '51992386664@c.us',
 const buttons = [
   { id: 'boton_si', body: 'SI' },
   { id: 'boton_no', body: 'NO' },
@@ -52,20 +43,19 @@ client.on('ready', async () => {
     });
   });
   await sleep(2000);
-
   const job1 = cron
     .schedule('0 06 13 * * *', async () => {
       console.log('--------------------------');
       console.log('Job 1');
       numbers.map(async (number, idx) => {
-        sendMedia(
+        await sendMedia(
           client,
           number,
           'chicho_agro_bienvenida.png',
           '¡Felicidades por activar tu *tarjeta digital* Interbank! 🥳'
         );
         await sleep(2000);
-        sendMedia(
+        await sendMedia(
           client,
           number,
           'chicho_agro_antesydespues.png',
@@ -74,7 +64,7 @@ client.on('ready', async () => {
         await sleep(2000);
         for (let i = 0; i < stepsInitial[0].message.length; i++) {
           sendMessage(client, number, stepsInitial[0].message[i]);
-          await sleep(1500);
+          await sleep(2000);
         }
         sendButtons(client, number, buttonText, buttons);
         await sleep(2000);
@@ -99,8 +89,8 @@ client.on('ready', async () => {
           number,
           '¡Hola! 👋 ¡*Hoy te pagarán tu 1er sueldo* en Hortifrut! Ahora que tienes tu cuenta sueldo y tarjeta digital, ¿ya sabes *cómo sacar tu dinero SIN tarjeta* 💵 en el agente Interbank o cajero GlobalNet más cercano? 🤔'
         );
-        await sleep(1500);
-        sendMedia(
+        await sleep(2000);
+        await sendMedia(
           client,
           number,
           'chicho_agro_retirosintarjeta.png',
@@ -131,10 +121,10 @@ client.on('ready', async () => {
       numbers.map(async (number, idx) => {
         for (let i = 0; i < stepsInitial[2].message.length; i++) {
           sendMessage(client, number, stepsInitial[2].message[i]);
-          await sleep(1500);
+          await sleep(2000);
         }
-        await sleep(1000);
-        sendMedia(client, number, 'chicho_agro_cuidamostutarjeta.png');
+        await sleep(2000);
+        await sendMedia(client, number, 'chicho_agro_cuidamostutarjeta.png');
         await sleep(2000);
         sendButtons(client, number, buttonText, buttons);
         await sleep(2000);
@@ -156,9 +146,9 @@ client.on('ready', async () => {
       numbers.map(async (number, idx) => {
         for (let i = 0; i < stepsInitial[3].message.length; i++) {
           sendMessage(client, number, stepsInitial[3].message[i]);
-          await sleep(1500);
+          await sleep(2000);
         }
-        sendMedia(
+        await sendMedia(
           client,
           number,
           'chicho_agro_transferenciaplin.png',
@@ -166,7 +156,7 @@ client.on('ready', async () => {
         );
         await sleep(2000);
         sendButtons(client, number, buttonText, buttons);
-        await sleep(1500);
+        await sleep(2000);
         const sql = `UPDATE usuarios SET fase = 'Fase4' WHERE celular = ${
           number.split('@')[0]
         }`;
@@ -185,9 +175,9 @@ client.on('ready', async () => {
       numbers.map(async (number, idx) => {
         for (let i = 0; i < stepsInitial[4].message.length; i++) {
           sendMessage(client, number, stepsInitial[4].message[i]);
-          await sleep(1500);
+          await sleep(2000);
         }
-        sendMedia(
+        await sendMedia(
           client,
           number,
           'chicho_agro_qrplin.png',
@@ -214,9 +204,9 @@ client.on('ready', async () => {
       numbers.map(async (number, idx) => {
         for (let i = 0; i < stepsInitial[5].message.length; i++) {
           sendMessage(client, number, stepsInitial[5].message[i]);
-          await sleep(1000);
+          await sleep(2000);
         }
-        sendMedia(
+        await sendMedia(
           client,
           number,
           'chicho_agro_pagoservicios.png',
@@ -224,7 +214,7 @@ client.on('ready', async () => {
         );
         await sleep(2000);
         sendButtons(client, number, buttonText, buttons);
-        await sleep(1000);
+        await sleep(2000);
         const sql = `UPDATE usuarios SET fase = 'Fase6' WHERE celular = ${
           number.split('@')[0]
         }`;
@@ -243,9 +233,9 @@ client.on('ready', async () => {
       numbers.map(async (number, idx) => {
         for (let i = 0; i < stepsInitial[6].message.length; i++) {
           sendMessage(client, number, stepsInitial[6].message[i]);
-          await sleep(1000);
+          await sleep(2000);
         }
-        sendMedia(
+        await sendMedia(
           client,
           number,
           'chicho_agro_transferenciaapp.png',
@@ -253,7 +243,7 @@ client.on('ready', async () => {
         );
         await sleep(2000);
         sendButtons(client, number, buttonText, buttons);
-        await sleep(1000);
+        await sleep(2000);
         const sql = `UPDATE usuarios SET fase = 'Fase7' WHERE celular = '${
           number.split('@')[0]
         }'`;
@@ -275,7 +265,7 @@ client.on('ready', async () => {
           number,
           '¡Hola! 👋 ¿Sabes dónde se encuentra el agente, cajero o Tienda Interbank más cercano a ti? 💚 Revísalo aquí: https://interbank.pe/puntos-de-atencion'
         );
-        await sleep(1000);
+        await sleep(2000);
         const sql = `UPDATE usuarios SET fase = 'Fase8' WHERE celular = ${
           number.split('@')[0]
         }`;
@@ -292,7 +282,7 @@ client.on('ready', async () => {
       console.log('--------------------------');
       console.log('Job 8');
       numbers.map(async (number, idx) => {
-        sendMedia(
+        await sendMedia(
           client,
           number,
           'chicho_agro_despedida.png',
@@ -301,7 +291,7 @@ client.on('ready', async () => {
         await sleep(2000);
         for (let i = 0; i < stepsInitial[7].message.length; i++) {
           sendMessage(client, number, stepsInitial[7].message[i]);
-          await sleep(1000);
+          await sleep(2000);
         }
         const sql = `UPDATE usuarios SET fase = 'Fase9' WHERE celular = ${
           number.split('@')[0]
@@ -378,10 +368,11 @@ function sleep(ms) {
 }
 const getChatById = async (number, client) => {
   const chat = await client.getChatById(number);
-  const chats = await chat.fetchMessages();
+  const chats = await chat.fetchMessages({ limit: 100 });
   const newchats = chats.map((chat) => {
     const { timestamp, body, from } = chat;
+    console.log(timestamp, body, from);
     return { timestamp, body, from };
   });
-  await saveChat(newchats);
+  await saveChat(newchats, number);
 };
