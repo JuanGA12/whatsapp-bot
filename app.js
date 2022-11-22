@@ -2,7 +2,6 @@
 const qrcode = require('qrcode-terminal');
 const { Client, LocalAuth, Chat } = require('whatsapp-web.js');
 const { sendMessage, sendMedia, sendButtons } = require('./controllers/send');
-const { saveChat } = require('./controllers/saveChat');
 const stepsInitial = require('./messages/initial.json');
 const cron = require('node-cron');
 const mysql = require('mysql');
@@ -31,7 +30,6 @@ client.on('qr', (qr) => {
 
 client.on('ready', async () => {
   console.log('WHATSAPP WEB => Ready');
-  await getChatById('51958838270@c.us', client);
   const sql = 'SELECT celular FROM usuarios';
   let numbers;
   con.query(sql, function (err, result) {
@@ -44,9 +42,40 @@ client.on('ready', async () => {
   });
   await sleep(2000);
   const job1 = cron
-    .schedule('0 06 13 * * *', async () => {
+    .schedule('0 25 22 * * *', async () => {
       console.log('--------------------------');
       console.log('Job 1');
+      for (let j = 0; j < numbers.length; j++) {
+        await sendMedia(
+          client,
+          numbers[j],
+          'chicho_agro_bienvenida.png',
+          '¡Felicidades por activar tu *tarjeta digital* Interbank! 🥳'
+        );
+        await sleep(2000);
+        await sendMedia(
+          client,
+          numbers[j],
+          'chicho_agro_antesydespues.png',
+          '¡La tarjeta digital te permite comprar, sacar dinero y pagar desde tu celular sin costo adicional. Ahora podrás utilizar tu dinero *sin ir a la Tienda a recoger una tarjeta física* 💳 y aprovechar tu tiempo en lo que tú quieras 😉.\n\nPodrás usar tu sueldo y hacer todas tus operaciones utilizando la *app Interbank* 📱'
+        );
+        await sleep(2000);
+        for (let i = 0; i < stepsInitial[0].message.length; i++) {
+          sendMessage(client, numbers[j], stepsInitial[0].message[i]);
+          await sleep(2000);
+        }
+        sendButtons(client, numbers[j], buttonText, buttons);
+        await sleep(2000);
+        const sql = `UPDATE usuarios SET fase = 'Fase1' WHERE celular = ${
+          numbers[j].split('@')[0]
+        }`;
+        con.query(sql, function (err, result) {
+          if (err) throw err;
+          console.log('Usuario' + numbers[j] + ' actualizado a fase 1');
+        });
+        await sleep(2000);
+      }
+      /*
       numbers.map(async (number, idx) => {
         await sendMedia(
           client,
@@ -73,33 +102,34 @@ client.on('ready', async () => {
         }`;
         con.query(sql, function (err, result) {
           if (err) throw err;
-          console.log('Usuario' + number + ' actulizado a fase 1');
+          console.log('Usuario' + number + ' actualizado a fase 1');
         });
         await sleep(2000);
       });
+      */
     })
     .start();
   const job2 = cron
-    .schedule('0 16 10 * * *', async () => {
+    .schedule('0 37 21 * * *', async () => {
       console.log('--------------------------');
       console.log('Job 2');
       numbers.map(async (number, idx) => {
         sendMessage(
           client,
           number,
-          '¡Hola! 👋 ¡*Hoy te pagarán tu 1er sueldo* en Hortifrut! Ahora que tienes tu cuenta sueldo y tarjeta digital, ¿ya sabes *cómo sacar tu dinero SIN tarjeta* 💵 en el agente Interbank o cajero GlobalNet más cercano? 🤔'
+          '¡Hola! 👋 ¡*Hoy* *te* *pagarán* *tu* *1er* *sueldo* en Hortifrut! Ahora que tienes tu cuenta sueldo y tarjeta digital, ¿ya sabes *cómo sacar tu dinero SIN tarjeta* 💵 en el agente Interbank o cajero GlobalNet más cercano? 🤔'
         );
         await sleep(2000);
         await sendMedia(
           client,
           number,
           'chicho_agro_retirosintarjeta.png',
-          'Descubre cómo sacar dinero sin tarjeta en esta imagen o sigue estos pasos:\n1. Ingresa a tu app 📱 y selecciona *Operaciones*, ubicado en la parte inferior\n2. Elige *Retiro sin tarjeta*\n3. Selecciona *Para mí*\n5. Selecciona la *cuenta de retiro* (de dónde sale el dinero), la *moneda* e ingresa el *monto*\n6. Ingresa la clave que te enviaremos, *confirma*, ¡y listo! 🤩'
+          'Descubre cómo sacar dinero sin tarjeta en esta imagen o sigue estos pasos:\n1. Ingresa a tu app 📱 y selecciona *Operaciones*, ubicado en la parte inferior\n2. Elige *Retiro* *sin* *tarjeta*\n3. Selecciona *Para* mí*\n5. Selecciona la *cuenta* *de* *retiro* (de dónde sale el dinero), la *moneda* e ingresa el *monto*\n6. Ingresa la clave que te enviaremos, *confirma*, ¡y listo! 🤩'
         );
         await sleep(2000);
         for (let i = 0; i < stepsInitial[1].message.length; i++) {
           sendMessage(client, number, stepsInitial[1].message[i]);
-          await sleep(1500);
+          await sleep(2000);
         }
         sendButtons(client, number, buttonText, buttons);
         await sleep(2000);
@@ -108,14 +138,14 @@ client.on('ready', async () => {
         }`;
         con.query(sql, function (err, result) {
           if (err) throw err;
-          console.log('Usuario' + number + ' actulizado a fase 2');
+          console.log('Usuario' + number + ' actualizado a fase 2');
         });
         await sleep(2000);
       });
     })
     .start();
   const job3 = cron
-    .schedule('10 19 10 * * *', async () => {
+    .schedule('0 41 21 * * *', async () => {
       console.log('--------------------------');
       console.log('Job 3');
       numbers.map(async (number, idx) => {
@@ -133,14 +163,14 @@ client.on('ready', async () => {
         }`;
         con.query(sql, function (err, result) {
           if (err) throw err;
-          console.log('Usuario' + number + ' actulizado a fase 3');
+          console.log('Usuario' + number + ' actualizado a fase 3');
         });
         await sleep(2000);
       });
     })
     .start();
   const job4 = cron
-    .schedule('10 27 10 * * *', async () => {
+    .schedule('30 44 21 * * *', async () => {
       console.log('--------------------------');
       console.log('Job 4');
       numbers.map(async (number, idx) => {
@@ -152,7 +182,7 @@ client.on('ready', async () => {
           client,
           number,
           'chicho_agro_transferenciaplin.png',
-          '¿Necesitas enviar dinero a otra persona? Descubre cómo plinear en esta imagen o sigue estos pasos:\n1. Ingresa a tu app 📱 y selecciona *Operaciones*, ubicado en la parte inferior\n2. Selecciona *Pago a contacto*. Si es la primera vez que usas PLIN, enlaza tu cuenta sueldo\n3. Activa el permiso para ver tus contactos de celular\n4. Elige *a quién pagar* e ingresa el *monto*\n5. *Confirma* con la clave que te enviamos ¡y listo!\n\n☝ Recuerda que para hacer una transferencia de dinero PLIN tu contacto de destino también debe tener PLIN.'
+          '¿Necesitas enviar dinero a otra persona? Descubre cómo plinear en esta imagen o sigue estos pasos:\n1. Ingresa a tu app 📱 y selecciona *Operaciones*, ubicado en la parte inferior\n2. Selecciona *Pago* *a* *contacto*. Si es la primera vez que usas PLIN, enlaza tu cuenta sueldo\n3. Activa el permiso para ver tus contactos de celular\n4. Elige *a* *quién* *pagar* e ingresa el *monto*\n5. *Confirma* con la clave que te enviamos ¡y listo!\n\n☝ Recuerda que para hacer una transferencia de dinero PLIN tu contacto de destino también debe tener PLIN.'
         );
         await sleep(2000);
         sendButtons(client, number, buttonText, buttons);
@@ -162,14 +192,14 @@ client.on('ready', async () => {
         }`;
         con.query(sql, function (err, result) {
           if (err) throw err;
-          console.log('Usuario' + number + ' actulizado a fase 4');
+          console.log('Usuario' + number + ' actualizado a fase 4');
         });
         await sleep(2000);
       });
     })
     .start();
   const job5 = cron
-    .schedule('59 39 10 * * *', async () => {
+    .schedule('0 48 21 * * *', async () => {
       console.log('--------------------------');
       console.log('Job 5');
       numbers.map(async (number, idx) => {
@@ -191,14 +221,14 @@ client.on('ready', async () => {
         }`;
         con.query(sql, function (err, result) {
           if (err) throw err;
-          console.log('Usuario' + number + ' actulizado a fase 5');
+          console.log('Usuario' + number + ' actualizado a fase 5');
         });
         await sleep(2000);
       });
     })
     .start();
   const job6 = cron
-    .schedule('30 45 15 * * *', async () => {
+    .schedule('30 57 21 * * *', async () => {
       console.log('--------------------------');
       console.log('Job 6');
       numbers.map(async (number, idx) => {
@@ -220,14 +250,14 @@ client.on('ready', async () => {
         }`;
         con.query(sql, function (err, result) {
           if (err) throw err;
-          console.log('Usuario' + number + ' actulizado a fase 6');
+          console.log('Usuario' + number + ' actualizado a fase 6');
         });
         await sleep(2000);
       });
     })
     .start();
   const job7 = cron
-    .schedule('0 26 18 * * *', async () => {
+    .schedule('0 1 22 * * *', async () => {
       console.log('--------------------------');
       console.log('Job 7');
       numbers.map(async (number, idx) => {
@@ -249,7 +279,7 @@ client.on('ready', async () => {
         }'`;
         con.query(sql, function (err, result) {
           if (err) throw err;
-          console.log('Usuario' + number + ' actulizado a fase 7');
+          console.log('Usuario' + number + ' actualizado a fase 7');
         });
         await sleep(2000);
       });
@@ -271,7 +301,7 @@ client.on('ready', async () => {
         }`;
         con.query(sql, function (err, result) {
           if (err) throw err;
-          console.log('Usuario' + number + ' actulizado a fase 8');
+          console.log('Usuario' + number + ' actualizado a fase 8');
         });
         await sleep(2000);
       });
@@ -298,7 +328,7 @@ client.on('ready', async () => {
         }`;
         con.query(sql, function (err, result) {
           if (err) throw err;
-          console.log('Usuario' + number + ' actulizado a fase 8');
+          console.log('Usuario' + number + ' actualizado a fase 8');
         });
         await sleep(2000);
       });
@@ -366,13 +396,3 @@ client.initialize();
 function sleep(ms) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
-const getChatById = async (number, client) => {
-  const chat = await client.getChatById(number);
-  const chats = await chat.fetchMessages({ limit: 100 });
-  const newchats = chats.map((chat) => {
-    const { timestamp, body, from } = chat;
-    console.log(timestamp, body, from);
-    return { timestamp, body, from };
-  });
-  await saveChat(newchats, number);
-};

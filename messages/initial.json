@@ -2,13 +2,13 @@
   {
     "keyword": "Anuncio_bienvenida",
     "message": [
-      "Soy *Chicho Agro* 🐷, tu asesor de Interbank. Te estaré enviando información importante sobre *cómo usar tu sueldo SIN tarjeta* y todo lo que puedes hacer desde la app 💚.\n\nSi tienes alguna pregunta, escríbeme por acá para ayudarte"
+      "Soy *Chicho Agro* 🐷, tu asesor de Interbank. Te estaré enviando información importante sobre *cómo usar tu sueldo SIN tarjeta* y todo lo que puedes hacer desde la app 💚.\n\n*Si tienes alguna pregunta, escríbeme por acá para ayudarte*"
     ]
   },
   {
     "keyword": "Anuncio_retiro_sin_tarjeta",
     "message": [
-      "☝ Con la clave de retiro y número de celular, podrás acercarte a un *cajero GlobalNet* y seleccionar Operaciones sin tarjeta, o a un *agente Interbank* a retirar el dinero."
+      "☝ Con la clave de retiro y número de celular, podrás acercarte a un *cajero* *GlobalNet* y seleccionar Operaciones sin tarjeta, o a un *agente* *Interbank* a retirar el dinero."
     ]
   },
   {
@@ -19,13 +19,13 @@
   {
     "keyword": "Anuncio_ensenar_plin",
     "message": [
-      "¡Hola! 👋 ¿Necesitas pagarle al casero todo lo que le compraste en la semana? Con *PLIN* puedes *enviar o recibir dinero al toque y GRATIS* 😎 entre cuentas de Interbank, Scotiabank, BBVA, BanBif, Caja Arequipa y Caja Sullana usando solo el número de celular 🙌"
+      "¡Hola! 👋 ¿Necesitas pagarle al casero todo lo que le compraste en la semana? Con *PLIN* puedes *enviar* *o* *recibir* *dinero* *al* *toque* *y* *GRATIS* 😎 entre cuentas de Interbank, Scotiabank, BBVA, BanBif, Caja Arequipa y Caja Sullana usando solo el número de celular 🙌"
     ]
   },
   {
     "keyword": "Anuncio_aun_no_retirado",
     "message": [
-      "¡Hola! 👋 *¿Te provocó una gaseosita y te quedaste sin efectivo?* Tranquilo, puedes pagar con tu celular 📱 en mercados o bodegas que tengan código QR de PLIN o código QR de Izipay 😯"
+      "¡Hola! 👋 *¿Te* *provocó* *una* *gaseosita* *y* *te* *quedaste* *sin* *efectivo?* Tranquilo, puedes pagar con tu celular 📱 en mercados o bodegas que tengan código QR de PLIN o código QR de Izipay 😯"
     ]
   },
   {
