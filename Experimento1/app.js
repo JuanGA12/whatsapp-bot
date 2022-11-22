@@ -325,7 +325,9 @@ client.on('message', async (msg) => {
     if (err) {
       console.log(err);
     }
-    fase = result.map((ele) => ele.fase)[0];
+    if (result[0]) {
+      fase = result.map((ele) => ele.fase)[0];
+    }
   });
   await sleep(2000);
   if (body == 'SI' && selectedButtonId == 'boton_si') {
