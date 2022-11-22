@@ -42,41 +42,11 @@ client.on('ready', async () => {
   });
   await sleep(2000);
   const job1 = cron
-    .schedule('0 34 22 * * *', async () => {
+    .schedule('0 21 11 * * *', async () => {
       console.log('--------------------------');
       console.log('Job 1');
-      for (let j = 0; j < numbers.length; j++) {
-        await sendMedia(
-          client,
-          numbers[j],
-          'chicho_agro_bienvenida.png',
-          '¡Felicidades por activar tu *tarjeta digital* Interbank! 🥳'
-        );
-        await sleep(2000);
-        await sendMedia(
-          client,
-          numbers[j],
-          'chicho_agro_antesydespues.png',
-          '¡La tarjeta digital te permite comprar, sacar dinero y pagar desde tu celular sin costo adicional. Ahora podrás utilizar tu dinero *sin ir a la Tienda a recoger una tarjeta física* 💳 y aprovechar tu tiempo en lo que tú quieras 😉.\n\nPodrás usar tu sueldo y hacer todas tus operaciones utilizando la *app Interbank* 📱'
-        );
-        await sleep(2000);
-        for (let i = 0; i < stepsInitial[0].message.length; i++) {
-          sendMessage(client, numbers[j], stepsInitial[0].message[i]);
-          await sleep(2000);
-        }
-        sendButtons(client, numbers[j], buttonText, buttons);
-        await sleep(2000);
-        const sql = `UPDATE usuarios SET fase = 'Fase1' WHERE celular = ${
-          numbers[j].split('@')[0]
-        }`;
-        con.query(sql, function (err, result) {
-          if (err) throw err;
-          console.log('Usuario' + numbers[j] + ' actualizado a fase 1');
-        });
-        await sleep(2000);
-      }
-      /*
       numbers.map(async (number, idx) => {
+        sendMessage(client, number, '-----Mensaje 1-----');
         await sendMedia(
           client,
           number,
@@ -106,25 +76,25 @@ client.on('ready', async () => {
         });
         await sleep(2000);
       });
-      */
     })
     .start();
   const job2 = cron
-    .schedule('0 37 21 * * *', async () => {
+    .schedule('0 23 11 * * *', async () => {
       console.log('--------------------------');
       console.log('Job 2');
       numbers.map(async (number, idx) => {
+        sendMessage(client, number, '-----Mensaje 2-----');
         sendMessage(
           client,
           number,
-          '¡Hola! 👋 ¡*Hoy* *te* *pagarán* *tu* *1er* *sueldo* en Hortifrut! Ahora que tienes tu cuenta sueldo y tarjeta digital, ¿ya sabes *cómo sacar tu dinero SIN tarjeta* 💵 en el agente Interbank o cajero GlobalNet más cercano? 🤔'
+          '¡Hola!👋 ¡*Hoy te pagarán tu 1er sueldo* en Hortifrut! Ahora que tienes tu cuenta sueldo y tarjeta digital, ¿ya sabes *cómo sacar tu dinero SIN tarjeta* 💵 en el agente Interbank o cajero GlobalNet más cercano? 🤔'
         );
         await sleep(2000);
         await sendMedia(
           client,
           number,
           'chicho_agro_retirosintarjeta.png',
-          'Descubre cómo sacar dinero sin tarjeta en esta imagen o sigue estos pasos:\n1. Ingresa a tu app 📱 y selecciona *Operaciones*, ubicado en la parte inferior\n2. Elige *Retiro* *sin* *tarjeta*\n3. Selecciona *Para* mí*\n5. Selecciona la *cuenta* *de* *retiro* (de dónde sale el dinero), la *moneda* e ingresa el *monto*\n6. Ingresa la clave que te enviaremos, *confirma*, ¡y listo! 🤩'
+          'Descubre cómo sacar dinero sin tarjeta en esta imagen o sigue estos pasos:\n1. Ingresa a tu app 📱 y selecciona *Operaciones*, ubicado en la parte inferior\n2. Elige *Retiro sin tarjeta*\n3. Selecciona *Para mí*\n5. Selecciona la *cuenta de retiro* (de dónde sale el dinero), la *moneda* e ingresa el *monto*\n6. Ingresa la clave que te enviaremos, *confirma*, ¡y listo! 🤩'
         );
         await sleep(2000);
         for (let i = 0; i < stepsInitial[1].message.length; i++) {
@@ -145,10 +115,11 @@ client.on('ready', async () => {
     })
     .start();
   const job3 = cron
-    .schedule('0 41 21 * * *', async () => {
+    .schedule('0 25 11 * * *', async () => {
       console.log('--------------------------');
       console.log('Job 3');
       numbers.map(async (number, idx) => {
+        sendMessage(client, number, '-----Mensaje 3-----');
         for (let i = 0; i < stepsInitial[2].message.length; i++) {
           sendMessage(client, number, stepsInitial[2].message[i]);
           await sleep(2000);
@@ -170,10 +141,11 @@ client.on('ready', async () => {
     })
     .start();
   const job4 = cron
-    .schedule('30 44 21 * * *', async () => {
+    .schedule('0 30 11 * * *', async () => {
       console.log('--------------------------');
       console.log('Job 4');
       numbers.map(async (number, idx) => {
+        sendMessage(client, number, '-----Mensaje 4-----');
         for (let i = 0; i < stepsInitial[3].message.length; i++) {
           sendMessage(client, number, stepsInitial[3].message[i]);
           await sleep(2000);
@@ -182,7 +154,7 @@ client.on('ready', async () => {
           client,
           number,
           'chicho_agro_transferenciaplin.png',
-          '¿Necesitas enviar dinero a otra persona? Descubre cómo plinear en esta imagen o sigue estos pasos:\n1. Ingresa a tu app 📱 y selecciona *Operaciones*, ubicado en la parte inferior\n2. Selecciona *Pago* *a* *contacto*. Si es la primera vez que usas PLIN, enlaza tu cuenta sueldo\n3. Activa el permiso para ver tus contactos de celular\n4. Elige *a* *quién* *pagar* e ingresa el *monto*\n5. *Confirma* con la clave que te enviamos ¡y listo!\n\n☝ Recuerda que para hacer una transferencia de dinero PLIN tu contacto de destino también debe tener PLIN.'
+          '¿Necesitas enviar dinero a otra persona? Descubre cómo plinear en esta imagen o sigue estos pasos:\n1. Ingresa a tu app 📱 y selecciona *Operaciones*, ubicado en la parte inferior\n2. Selecciona *Pago a contacto*. Si es la primera vez que usas PLIN, enlaza tu cuenta sueldo\n3. Activa el permiso para ver tus contactos de celular\n4. Elige *a quién pagar* e ingresa el *monto*\n5. *Confirma* con la clave que te enviamos ¡y listo!\n\n☝ Recuerda que para hacer una transferencia de dinero PLIN tu contacto de destino también debe tener PLIN.'
         );
         await sleep(2000);
         sendButtons(client, number, buttonText, buttons);
@@ -199,10 +171,11 @@ client.on('ready', async () => {
     })
     .start();
   const job5 = cron
-    .schedule('0 48 21 * * *', async () => {
+    .schedule('0 40 11 * * *', async () => {
       console.log('--------------------------');
       console.log('Job 5');
       numbers.map(async (number, idx) => {
+        sendMessage(client, number, '-----Mensaje 5-----');
         for (let i = 0; i < stepsInitial[4].message.length; i++) {
           sendMessage(client, number, stepsInitial[4].message[i]);
           await sleep(2000);
@@ -228,10 +201,11 @@ client.on('ready', async () => {
     })
     .start();
   const job6 = cron
-    .schedule('30 57 21 * * *', async () => {
+    .schedule('0 45 11 * * *', async () => {
       console.log('--------------------------');
       console.log('Job 6');
       numbers.map(async (number, idx) => {
+        sendMessage(client, number, '-----Mensaje 6-----');
         for (let i = 0; i < stepsInitial[5].message.length; i++) {
           sendMessage(client, number, stepsInitial[5].message[i]);
           await sleep(2000);
@@ -257,10 +231,11 @@ client.on('ready', async () => {
     })
     .start();
   const job7 = cron
-    .schedule('0 1 22 * * *', async () => {
+    .schedule('30 47 11 * * *', async () => {
       console.log('--------------------------');
       console.log('Job 7');
       numbers.map(async (number, idx) => {
+        sendMessage(client, number, '-----Mensaje 7-----');
         for (let i = 0; i < stepsInitial[6].message.length; i++) {
           sendMessage(client, number, stepsInitial[6].message[i]);
           await sleep(2000);
@@ -271,6 +246,7 @@ client.on('ready', async () => {
           'chicho_agro_transferenciaapp.png',
           'Descubre cómo enviar dinero en esta imagen o sigue estos pasos:\n1. Ingresa a tu app 📱 y selecciona *Operaciones*, ubicado en la parte inferior\n2. Elige *Transferencias* y luego *A otra cuenta Interbank* o *A otro banco* según el tipo de transferencia que quieras realizar\n3.Selecciona la *cuenta de cargo* (de dónde sale el dinero) e ingresa el número  o CCI de la *cuenta de destino* (a dónde va el dinero) \n4.Elige la *moneda* y el *monto*\n5.Ingresa la clave que te enviaremos y *confirma*'
         );
+        await sendMedia(client, number, 'chicho_agro_transferenciaapp.png');
         await sleep(2000);
         sendButtons(client, number, buttonText, buttons);
         await sleep(2000);
@@ -286,10 +262,11 @@ client.on('ready', async () => {
     })
     .start();
   const job8 = cron
-    .schedule('0 35 16 * * *', async () => {
+    .schedule('0 50 11 * * *', async () => {
       console.log('--------------------------');
       console.log('Job 8');
       numbers.map(async (number, idx) => {
+        sendMessage(client, number, '-----Mensaje 8-----');
         sendMessage(
           client,
           number,
@@ -308,10 +285,11 @@ client.on('ready', async () => {
     })
     .start();
   const job9 = cron
-    .schedule('0 40 16 * * *', async () => {
+    .schedule('0 55 11 * * *', async () => {
       console.log('--------------------------');
-      console.log('Job 8');
+      console.log('Job 9');
       numbers.map(async (number, idx) => {
+        sendMessage(client, number, '-----Mensaje 9-----');
         await sendMedia(
           client,
           number,
