@@ -9,6 +9,7 @@ create table usuarios(
 
 INSERT INTO usuarios (
   celular,
-  fase
+  fase,
+  menu
 )
 VALUES ('51959163747','Fase0',FALSE), ('51958838270','Fase0',FALSE);
