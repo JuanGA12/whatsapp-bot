@@ -58,7 +58,7 @@ client.on('ready', async () => {
           client,
           number,
           'chicho_agro_antesydespues.png',
-          '¡La tarjeta digital te permite comprar, sacar dinero y pagar desde tu celular sin costo adicional. Ahora podrás utilizar tu dinero *sin ir a la Tienda a recoger una tarjeta física* 💳 y aprovechar tu tiempo en lo que tú quieras 😉.\n\nPodrás usar tu sueldo y hacer todas tus operaciones utilizando la *app Interbank* 📱'
+          '¡La tarjeta digital te permite comprar, sacar dinero y pagar desde tu celular sin costo adicional. Ahora podrás usar tu dinero *sin ir a la Tienda a recoger una tarjeta física* 💳 y aprovechar tu tiempo en lo que tú quieras 😉.\n\nPodrás usar tu sueldo y hacer todas tus operaciones usando la *app Interbank* 📱'
         );
         await sleep(2000);
         for (let i = 0; i < stepsInitial[0].message.length; i++) {
@@ -353,6 +353,12 @@ client.on('message', async (msg) => {
       from,
       '*¡Excelente!* 🙌  te agradeceríamos que nos dejes un comentario para mejorar poco a poco nuestro contenido.'
     );
+    const sql = `UPDATE usuarios SET fase = 'Terminado' WHERE celular = ${
+      from.split('@')[0]
+    }`;
+    con.query(sql, function (err, result) {
+      console.error(err ? err : 'SQL DONE');
+    });
     //Se podria cambiar a fase6 para que no envie mensaje si hay un 1---5 o emoji
     await sleep(1000);
   }

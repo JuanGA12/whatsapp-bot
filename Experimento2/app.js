@@ -1,21 +1,33 @@
 const qrcode = require('qrcode-terminal');
 const { Client, LocalAuth } = require('whatsapp-web.js');
 const { sendMessage, sendMedia, sendButtons } = require('./controllers/send');
-const stepsInitial = require('./messages/initial.json');
 const cron = require('node-cron');
 const mysql = require('mysql');
+const express = require('express');
+const cors = require('cors');
+const { generateImage } = require('./controllers/handle');
+
 const buttons = [
   { id: 'boton_si', body: 'SI' },
   { id: 'boton_no', body: 'NO' },
 ];
-const emojis = ['😍', '😀', '😐', '🙁', '😠'];
+const buttons2 = [
+  { id: 'menu_si', body: 'SI' },
+  { id: 'menu_no', body: 'NO' },
+];
 const buttonText = '¿Te resultó útil esta información? Presiona *SI* o *NO*';
+const buttonText2 = '¿Volver al menú principal? Presiona *SI* o *NO*';
+function sleep(ms) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
 const client = new Client();
-/**{
-  authStrategy: new LocalAuth({
-    clientId: 'client-one',
-  }),
-} */
+
+// const app = express();
+// app.use(cors());
+// app.use(express.json());
+// app.use('/', require('./routes/web'));
+// const server = require('http').Server(app);
+
 const con = mysql.createConnection({
   host: '127.0.0.1',
   user: 'root',
@@ -23,6 +35,12 @@ const con = mysql.createConnection({
   database: 'bd_whatsapp_exp2',
 });
 
+// client.on('qr', (qr) =>
+//   generateImage(qr, () => {
+//     qrcode.generate(qr, { small: true });
+//     console.log(`Ver QR http://localhost:8080/qr`);
+//   })
+// );
 client.on('qr', (qr) => {
   qrcode.generate(qr, { small: true });
 });
@@ -41,7 +59,7 @@ client.on('ready', async () => {
   });
   await sleep(2000);
   const job1 = cron
-    .schedule('0 59 15 * * *', async () => {
+    .schedule('0 18 12 * * *', async () => {
       console.log('--------------------------');
       console.log('Job 1');
       numbers.map(async (number, idx) => {
@@ -63,7 +81,7 @@ client.on('ready', async () => {
         sendMessage(
           client,
           number,
-          'Soy *Chicho Agro* 🐷, tu asesor de Interbank. Te estaré enviando información importante sobre *cómo usar tu sueldo SIN tarjeta* y todo lo que puedes hacer desde la app 💚\n\nSi tienes alguna pregunta, escríbeme por acá para ayudarte'
+          'Soy *Chicho* 🐷, tu asesor de Interbank. Te estaré enviando información importante sobre *cómo usar tu sueldo SIN tarjeta* y todo lo que puedes hacer desde la app 💚\n\nSi tienes alguna pregunta, escríbeme por acá para ayudarte'
         );
         await sleep(2000);
         sendMessage(
@@ -298,7 +316,6 @@ client.on('ready', async () => {
     })
     .start();
 });
-
 client.on('message', async (msg) => {
   const { from, body, selectedButtonId } = msg;
   if (from == 'status@broadcast') {
@@ -323,122 +340,157 @@ client.on('message', async (msg) => {
   await sleep(2000);
 
   //Selección opción A
-  if ((body == 'A' || body == 'a' || body == 'opción A') && menu_ == true) {
+  if (
+    (body == 'A' || body == 'a' || body == 'opción A' || body == 'opcion A') &&
+    menu_ == true
+  ) {
+    const sql = `UPDATE usuarios SET menu = ${false} WHERE celular = ${
+      from.split('@')[0]
+    }`;
+    con.query(sql, function (err, result) {
+      console.error(err ? err : 'SQL DONE');
+    });
+    await sleep(2000);
     await sendMedia(
       client,
       from,
       'A.png',
-      'Descubre cómo sacar dinero sin tarjeta en esta imagen o sigue estos pasos:\n1. Ingresa a tu app 📱 y selecciona “*Operaciones*”, ubicado en la parte inferior\n2. Elige “*Retiro sin tarjeta*”\n3. Selecciona “*Para mí*”\n4. Selecciona la *cuenta de retiro* (de dónde sale el dinero), la *moneda* e ingresa el *monto*\n5. Ingresa la clave que te enviaremos, *confirma*, ¡y listo! 🤩'
+      'Descubre cómo sacar dinero sin tarjeta en esta imagen o sigue estos pasos:\n1. Ingresa a tu app 📱 y selecciona *Operaciones*, ubicado en la parte inferior\n2. Elige *Retiro sin tarjeta*\n3. Selecciona *Para mí*\n4. Selecciona la *cuenta de retiro* (de dónde sale el dinero), la *moneda* e ingresa el *monto*\n5. Ingresa la clave que te enviaremos, *confirma*, ¡y listo! 🤩'
     );
     await sleep(2000);
     sendMessage(
       client,
       from,
-      '☝ Con la clave de retiro y número de celular, podrás acercarte a un *cajero GlobalNet* y seleccionar "Operaciones sin tarjeta", o a un *agente Interbank* a retirar el dinero.'
+      '☝ Con la clave de retiro y número de celular, podrás acercarte a un *cajero GlobalNet* y seleccionar Operaciones sin tarjeta, o a un *agente Interbank* a retirar el dinero.'
     );
     await sleep(2000);
-    sendButtons(client, from, buttonText, buttons);
+    //opcion de menu
+    sendButtons(client, from, buttonText2, buttons2);
     await sleep(2000);
+    //
+  }
+  //Selección opción B
+  if (
+    (body == 'B' || body == 'b' || body == 'opción B' || body == 'opcion B') &&
+    menu_ == true
+  ) {
     const sql = `UPDATE usuarios SET menu = ${false} WHERE celular = ${
       from.split('@')[0]
     }`;
     con.query(sql, function (err, result) {
-      console.error(err ? err : result);
+      console.error(err ? err : 'SQL DONE');
     });
     await sleep(2000);
-  }
-  //Selección opción B
-  if ((body == 'B' || body == 'b' || body == 'opción B') && menu_ == true) {
     await sendMedia(
       client,
       from,
       'B.png',
-      'Descubre cómo pagar recibos y recargar el saldo de tu celular en esta imagen o sigue estos pasos:\n1. Ingresa a tu app 📱 y selecciona *Operaciones*, ubicado en la parte inferior\n2. Elige la opción "*Pagos y recargas*" y luego "*Recarga de celular*" o "*Pago de servicios*" según lo que quieras realizar\n3. Completa la información, ¡y listo!'
+      'Descubre cómo pagar recibos y recargar el saldo de tu celular en esta imagen o sigue estos pasos:\n1. Ingresa a tu app 📱 y selecciona *Operaciones*, ubicado en la parte inferior\n2. Elige la opción *Pagos y recargas* y luego *Recarga de celular* o *Pago de servicios* según lo que quieras realizar\n3. Completa la información, ¡y listo!'
     );
     await sleep(2000);
-    sendButtons(client, from, buttonText, buttons);
+    sendButtons(client, from, buttonText2, buttons2);
     await sleep(2000);
+  }
+  //Selección opción C
+  if (
+    (body == 'C' || body == 'c' || body == 'opción C' || body == 'opcion C') &&
+    menu_ == true
+  ) {
     const sql = `UPDATE usuarios SET menu = ${false} WHERE celular = ${
       from.split('@')[0]
     }`;
     con.query(sql, function (err, result) {
-      console.error(err ? err : result);
+      console.error(err ? err : 'SQL DONE');
     });
     await sleep(2000);
-  }
-  //Selección opción C
-  if ((body == 'C' || body == 'c' || body == 'opción C') && menu_ == true) {
     await sendMedia(
       client,
       from,
       'C.png',
-      'Descubre cómo pagar con QR en esta imagen o sigue estos pasos:\n1. Pregúntale al bodeguero si tiene QR\n2. Ingresa a tu app 📱 y selecciona “*Operaciones*”, ubicado en la parte inferior\n3. Selecciona “*Pago con QR*”\n4. Enciende la cámara de tu celular y enfoca el *código QR*\n5. Escribe el *monto* que quieres pagar'
+      'Descubre cómo pagar con QR en esta imagen o sigue estos pasos:\n1. Pregúntale al bodeguero si tiene QR\n2. Ingresa a tu app 📱 y selecciona *Operaciones*, ubicado en la parte inferior\n3. Selecciona *Pago con QR*\n4. Enciende la cámara de tu celular y enfoca el *código QR*\n5. Escribe el *monto* que quieres pagar'
     );
     await sleep(2000);
-    sendButtons(client, from, buttonText, buttons);
+    sendButtons(client, from, buttonText2, buttons2);
     await sleep(2000);
+  }
+  //Selección opción D
+  if (
+    (body == 'D' || body == 'd' || body == 'opción D' || body == 'opcion D') &&
+    menu_ == true
+  ) {
     const sql = `UPDATE usuarios SET menu = ${false} WHERE celular = ${
       from.split('@')[0]
     }`;
     con.query(sql, function (err, result) {
-      console.error(err ? err : result);
+      console.error(err ? err : 'SQL DONE');
     });
     await sleep(2000);
-  }
-  //Selección opción D
-  if ((body == 'D' || body == 'd' || body == 'opción D') && menu_ == true) {
     await sendMedia(
       client,
       from,
       'D.png',
-      '¿Necesitas enviar dinero a otra persona? Descubre cómo plinear en esta imagen o sigue estos pasos:\n1. Ingresa a tu app 📱 y selecciona "*Operaciones*", ubicado en la parte inferior\n2. Selecciona "*Pago a contacto*". Si es la primera vez que usas PLIN, enlaza tu cuenta sueldo\n3. Activa el permiso para ver tus contactos de celular\n4. Elige *a quién pagar* e ingresa el *monto*\n5. *Confirma* con la clave que te enviamos ¡y listo!\n\n☝ Recuerda que para hacer una transferencia de dinero PLIN tu contacto de destino también debe tener PLIN.'
+      '¿Necesitas enviar dinero a otra persona? Descubre cómo plinear en esta imagen o sigue estos pasos:\n1. Ingresa a tu app 📱 y selecciona *Operaciones*, ubicado en la parte inferior\n2. Selecciona *Pago a contacto*. Si es la primera vez que usas PLIN, enlaza tu cuenta sueldo\n3. Activa el permiso para ver tus contactos de celular\n4. Elige *a quién pagar* e ingresa el *monto*\n5. *Confirma* con la clave que te enviamos ¡y listo!\n\n☝ Recuerda que para hacer una transferencia de dinero PLIN tu contacto de destino también debe tener PLIN.'
     );
     await sleep(2000);
-    sendButtons(client, from, buttonText, buttons);
+    sendButtons(client, from, buttonText2, buttons2);
     await sleep(2000);
+  }
+  //Selección opción E
+  if (
+    (body == 'E' || body == 'e' || body == 'opción E' || body == 'opcion E') &&
+    menu_ == true
+  ) {
     const sql = `UPDATE usuarios SET menu = ${false} WHERE celular = ${
       from.split('@')[0]
     }`;
     con.query(sql, function (err, result) {
-      console.error(err ? err : result);
+      console.error(err ? err : 'SQL DONE');
     });
     await sleep(2000);
-  }
-  //Selección opción E
-  if ((body == 'E' || body == 'e' || body == 'opción E') && menu_ == true) {
     await sendMedia(
       client,
       from,
       'E.png',
-      'Descubre cómo enviar dinero en esta imagen o sigue estos pasos:\n1. Ingresa a tu app 📱 y selecciona *Operaciones*, ubicado en la parte inferior\n2. Elige “*Transferencias*” y luego “*A otra cuenta Interbank*” o "*A otro banco*" según el tipo de transferencia que quieras realizar\n3. Selecciona la *cuenta de cargo* (de dónde sale el dinero) e ingresa el número  o CCI de la *cuenta de destino* (a dónde va el dinero)\n4. Elige la *moneda* y el *monto*\n5. Ingresa la clave que te enviaremos y *confirma* '
+      'Descubre cómo enviar dinero en esta imagen o sigue estos pasos:\n1. Ingresa a tu app 📱 y selecciona *Operaciones*, ubicado en la parte inferior\n2. Elige *Transferencias* y luego *A otra cuenta Interbank* o *A otro banco* según el tipo de transferencia que quieras realizar\n3. Selecciona la *cuenta de cargo* (de dónde sale el dinero) e ingresa el número  o CCI de la *cuenta de destino* (a dónde va el dinero)\n4. Elige la *moneda* y el *monto*\n5. Ingresa la clave que te enviaremos y *confirma* '
     );
     await sleep(2000);
-    sendButtons(client, from, buttonText, buttons);
+    sendButtons(client, from, buttonText2, buttons2);
     await sleep(2000);
+  }
+  //Selección opción F
+  if (
+    (body == 'F' || body == 'f' || body == 'opción F' || body == 'opcion F') &&
+    menu_ == true
+  ) {
     const sql = `UPDATE usuarios SET menu = ${false} WHERE celular = ${
       from.split('@')[0]
     }`;
     con.query(sql, function (err, result) {
-      console.error(err ? err : result);
+      console.error(err ? err : 'SQL DONE');
     });
     await sleep(2000);
-  }
-  //Selección opción F
-  if ((body == 'F' || body == 'f' || body == 'opción F') && menu_ == true) {
     sendMessage(
       client,
       from,
       'Conoce el punto de atención Interbank más cercano aquí: https://interbank.pe/puntos-de-atencion'
     );
     await sleep(2000);
-    sendButtons(client, from, buttonText, buttons);
+    sendButtons(client, from, buttonText2, buttons2);
     await sleep(2000);
+  }
+  //Selección opción G
+  if (
+    (body == 'G' || body == 'g' || body == 'opción G' || body == 'opcion G') &&
+    menu_ == true
+  ) {
     const sql = `UPDATE usuarios SET menu = ${false} WHERE celular = ${
       from.split('@')[0]
     }`;
     con.query(sql, function (err, result) {
-      console.error(err ? err : result);
+      console.error(err ? err : 'SQL DONE');
     });
+    await sleep(2000);
+    sendMessage(client, from, 'Por favor escribe tu consulta');
     await sleep(2000);
   }
 
@@ -460,6 +512,34 @@ client.on('message', async (msg) => {
     );
     await sleep(2000);
   }
+  //Boton menu si
+  if (body == 'SI' && selectedButtonId == 'menu_si') {
+    const sql = `UPDATE usuarios SET menu = ${true} WHERE celular = ${
+      from.split('@')[0]
+    }`;
+    con.query(sql, function (err, result) {
+      console.error(err ? err : 'SQL DONE');
+    });
+    await sleep(2000);
+    sendMessage(
+      client,
+      from,
+      '*Comienza a usar tu dinero SIN tarjeta*, descubre cómo escribiendo la letra de la opción que quieras conocer:\n\nA) ¿Cómo retiro dinero con mi tarjeta digital?\nB) ¿Cómo pago mis servicios?\nC) ¿Cómo pago con código QR desde PLIN?\nD) ¿Cómo envío dinero por PLIN?\nE) ¿Cómo transfiero dinero desde mi app?\nF) ¿Cuál es el punto de atención de Interbank más cercano?\nG) Quiero escribir una consulta'
+    );
+    await sleep(2000);
+  }
+  //Boton menu no
+  if (body == 'NO' && selectedButtonId == 'menu_no') {
+    const sql = `UPDATE usuarios SET menu = ${true} WHERE celular = ${
+      from.split('@')[0]
+    }`;
+    con.query(sql, function (err, result) {
+      console.error(err ? err : 'SQL DONE');
+    });
+    await sleep(2000);
+    sendButtons(client, from, buttonText, buttons);
+    await sleep(2000);
+  }
 });
 client.on('authenticated', (session) => {
   console.log('WHATSAPP WEB => Authenticated');
@@ -473,10 +553,9 @@ client.on('authenticated', (session) => {
 });
 client.on('disconnected', (reason) => {
   console.log('WHATSAPP WEB => Disconnected');
-  client.initialize();
 });
-client.initialize();
 
-function sleep(ms) {
-  return new Promise((resolve) => setTimeout(resolve, ms));
-}
+client.initialize();
+server.listen(8080, () => {
+  console.log('⚡️[server]: Server is running at https://localhost:8080');
+});
