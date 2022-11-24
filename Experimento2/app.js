@@ -556,6 +556,6 @@ client.on('disconnected', (reason) => {
 });
 
 client.initialize();
-server.listen(8080, () => {
-  console.log('⚡️[server]: Server is running at https://localhost:8080');
-});
+// server.listen(8080, () => {
+//   console.log('⚡️[server]: Server is running at https://localhost:8080');
+// });
