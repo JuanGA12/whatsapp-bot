@@ -1,3 +1,5 @@
+CREATE DATABASE bd_whatsapp_exp1;
+use bd_whatsapp_exp1;
 create table usuarios(
 	celular  varchar(255) not null, 
     fase varchar(255) not null, 
