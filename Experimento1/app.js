@@ -20,7 +20,7 @@ const client = new Client();
 const con = mysql.createConnection({
   host: '127.0.0.1',
   user: 'root',
-  password: '',
+  password: '1234',
   database: 'bd_whatsapp_exp1',
 });
 
@@ -42,7 +42,7 @@ client.on('ready', async () => {
   });
   await sleep(2000);
   const job1 = cron
-    .schedule('0 21 11 * * *', async () => {
+    .schedule('0 49 11 * * *', async () => {
       console.log('--------------------------');
       console.log('Job 1');
       numbers.map(async (number, idx) => {
@@ -73,6 +73,17 @@ client.on('ready', async () => {
         con.query(sql, function (err, result) {
           if (err) throw err;
           console.log('Usuario' + number + ' actualizado a fase 1');
+        });
+        await sleep(2000);
+        const sql2 = `INSERT INTO mensajes (fecha, celular, envio, contenido) VALUES (${Date.now()}, ${
+          number.split('@')[0]
+        },
+          ${true},
+          "¡Felicidades por activar tu tarjeta digital Interbank!\n\n¡La tarjeta digital te permite comprar, sacar dinero y pagar desde tu celular sin costo adicional. Ahora podrás usar tu dinero sin ir a la Tienda a recoger una tarjeta física  y aprovechar tu tiempo en lo que tú quieras. Podrás usar tu sueldo y hacer todas tus operaciones usando la app Interbank\n\nSoy Chicho, tu asesor de Interbank. Te estaré enviando información importante sobre cómo usar tu sueldo SIN tarjeta y todo lo que puedes hacer desde la app.\n\nSi tienes alguna pregunta, escríbeme por acá para ayudarte\n\n${buttonText}"
+          )`;
+        con.query(sql2, function (err, result) {
+          if (err) throw err;
+          console.log('Mensaje guardado: ' + number);
         });
         await sleep(2000);
       });
@@ -111,6 +122,17 @@ client.on('ready', async () => {
           console.log('Usuario' + number + ' actualizado a fase 2');
         });
         await sleep(2000);
+        const sql2 = `INSERT INTO mensajes (fecha, celular, envio, contenido) VALUES (${Date.now()}, ${
+          number.split('@')[0]
+        },
+          ${true},
+          "¡Hola! ¡Hoy te pagarán tu 1er sueldo en Hortifrut! Ahora que tienes tu cuenta sueldo y tarjeta digital, ¿ya sabes cómo sacar tu dinero SIN tarjeta en el agente Interbank o cajero GlobalNet más cercano?\n\nDescubre cómo sacar dinero sin tarjeta en esta imagen o sigue estos pasos:\n1. Ingresa a tu app y selecciona Operaciones, ubicado en la parte inferior\n2. Elige Retiro sin tarjeta\n3. Selecciona Para mí\n5. Selecciona la cuenta de retiro (de dónde sale el dinero), la moneda e ingresa el monto\n6. Ingresa la clave que te enviaremos, confirma, ¡y listo!\n\nCon la clave de retiro y número de celular, podrás acercarte a un cajero GlobalNet y seleccionar Operaciones sin tarjeta, o a un agente Interbank a retirar el dinero.\n\n${buttonText}"
+          )`;
+        con.query(sql2, function (err, result) {
+          if (err) throw err;
+          console.log('Mensaje guardado: ' + number);
+        });
+        await sleep(2000);
       });
     })
     .start();
@@ -135,6 +157,17 @@ client.on('ready', async () => {
         con.query(sql, function (err, result) {
           if (err) throw err;
           console.log('Usuario' + number + ' actualizado a fase 3');
+        });
+        await sleep(2000);
+        const sql2 = `INSERT INTO mensajes (fecha, celular, envio, contenido) VALUES (${Date.now()}, ${
+          number.split('@')[0]
+        },
+          ${true},
+          "¡Hola! Sigue estas recomendaciones para cuidar tu tarjeta digital Interbank. ¡Queremos que estés seguro usándola!\n\n${buttonText}"
+          )`;
+        con.query(sql2, function (err, result) {
+          if (err) throw err;
+          console.log('Mensaje guardado: ' + number);
         });
         await sleep(2000);
       });
@@ -167,6 +200,17 @@ client.on('ready', async () => {
           console.log('Usuario' + number + ' actualizado a fase 4');
         });
         await sleep(2000);
+        const sql2 = `INSERT INTO mensajes (fecha, celular, envio, contenido) VALUES (${Date.now()}, ${
+          number.split('@')[0]
+        },
+          ${true},
+          "¡Hola! ¿Necesitas pagarle al casero todo lo que le compraste en la semana? Con PLIN puedes enviar o recibir dinero al toque y GRATIS entre cuentas de Interbank, Scotiabank, BBVA, BanBif, Caja Arequipa y Caja Sullana usando solo el número de celular\n\n¿Necesitas enviar dinero a otra persona? Descubre cómo plinear en esta imagen o sigue estos pasos:\n1. Ingresa a tu app y selecciona Operaciones, ubicado en la parte inferior\n2. Selecciona Pago a contacto. Si es la primera vez que usas PLIN, enlaza tu cuenta sueldo\n3. Activa el permiso para ver tus contactos de celular\n4. Elige a quién pagar e ingresa el monto\n5. Confirma con la clave que te enviamos ¡y listo!\n\nRecuerda que para hacer una transferencia de dinero PLIN tu contacto de destino también debe tener PLIN.\n\n${buttonText}"
+          )`;
+        con.query(sql2, function (err, result) {
+          if (err) throw err;
+          console.log('Mensaje guardado: ' + number);
+        });
+        await sleep(2000);
       });
     })
     .start();
@@ -197,6 +241,17 @@ client.on('ready', async () => {
           console.log('Usuario' + number + ' actualizado a fase 5');
         });
         await sleep(2000);
+        const sql2 = `INSERT INTO mensajes (fecha, celular, envio, contenido) VALUES (${Date.now()}, ${
+          number.split('@')[0]
+        },
+          ${true},
+          "¡Hola! ¿Te provocó una gaseosita y te quedaste sin efectivo? Tranquilo, puedes pagar con tu celular en mercados o bodegas que tengan código QR de PLIN o código QR de Izipay\n\nDescubre cómo pagar con QR en esta imagen o sigue estos pasos:\n1. Pregúntale al bodeguero si tiene QR\n2. Ingresa a tu app y selecciona Operaciones, ubicado en la parte inferior\n3. Selecciona Pago con QR\n4. Enciende la cámara de tu celular y enfoca el código QR\n5. Escribe el monto que quieres pagar\n\n${buttonText}"
+          )`;
+        con.query(sql2, function (err, result) {
+          if (err) throw err;
+          console.log('Mensaje guardado: ' + number);
+        });
+        await sleep(2000);
       });
     })
     .start();
@@ -225,6 +280,17 @@ client.on('ready', async () => {
         con.query(sql, function (err, result) {
           if (err) throw err;
           console.log('Usuario' + number + ' actualizado a fase 6');
+        });
+        await sleep(2000);
+        const sql2 = `INSERT INTO mensajes (fecha, celular, envio, contenido) VALUES (${Date.now()}, ${
+          number.split('@')[0]
+        },
+          ${true},
+          "¡Hola! ¡Evita las colas para pagar tus recibos y ahorra tiempo! Recarga tu celular o paga tu luz, agua, teléfono (¡y mucho más!) desde la app Interbank\n\nDescubre cómo pagar recibos y recargar el saldo de tu celular en esta imagen o sigue estos pasos:\n1. Ingresa a tu app y selecciona Operaciones, ubicado en la parte inferior\n2. Elige la opción Pagos y recargas y luego Recarga de celular o Pago de servicios según lo que quieras realizar\n3. Completa la información, ¡y listo!\n\n${buttonText}"
+          )`;
+        con.query(sql2, function (err, result) {
+          if (err) throw err;
+          console.log('Mensaje guardado: ' + number);
         });
         await sleep(2000);
       });
@@ -258,6 +324,17 @@ client.on('ready', async () => {
           console.log('Usuario' + number + ' actualizado a fase 7');
         });
         await sleep(2000);
+        const sql2 = `INSERT INTO mensajes (fecha, celular, envio, contenido) VALUES (${Date.now()}, ${
+          number.split('@')[0]
+        },
+          ${true},
+          "¡Hola! ¿Tienes que enviar dinero a un familiar? Puedes hacerlo desde la app Interbank GRATIS y rápido\n\nDescubre cómo enviar dinero en esta imagen o sigue estos pasos:\n1. Ingresa a tu app y selecciona Operaciones, ubicado en la parte inferior\n2. Elige Transferencias y luego A otra cuenta Interbank o A otro banco según el tipo de transferencia que quieras realizar\n3.Selecciona la cuenta de cargo (de dónde sale el dinero) e ingresa el número o CCI de la cuenta de destino (a dónde va el dinero) \n4.Elige la *moneda* y el monto\n5.Ingresa la clave que te enviaremos y confirma\n\n${buttonText}"
+          )`;
+        con.query(sql2, function (err, result) {
+          if (err) throw err;
+          console.log('Mensaje guardado: ' + number);
+        });
+        await sleep(2000);
       });
     })
     .start();
@@ -279,6 +356,17 @@ client.on('ready', async () => {
         con.query(sql, function (err, result) {
           if (err) throw err;
           console.log('Usuario' + number + ' actualizado a fase 8');
+        });
+        await sleep(2000);
+        const sql2 = `INSERT INTO mensajes (fecha, celular, envio, contenido) VALUES (${Date.now()}, ${
+          number.split('@')[0]
+        },
+          ${true},
+          "¡Hola! ¿Sabes dónde se encuentra el agente, cajero o Tienda Interbank más cercano a ti? Revísalo aquí: https://interbank.pe/puntos-de-atencion\n\n${buttonText}"
+          )`;
+        con.query(sql2, function (err, result) {
+          if (err) throw err;
+          console.log('Mensaje guardado: ' + number);
         });
         await sleep(2000);
       });
@@ -309,6 +397,17 @@ client.on('ready', async () => {
           console.log('Usuario' + number + ' actualizado a fase 8');
         });
         await sleep(2000);
+        const sql2 = `INSERT INTO mensajes (fecha, celular, envio, contenido) VALUES (${Date.now()}, ${
+          number.split('@')[0]
+        },
+          ${true},
+          "¡Felicitaciones! llegaste al final de nuestra travesía Ahora eres experto en usar tu nueva Tarjeta Digital y algunos conceptos del mundo bancario. Fue sencillo, ¿verdad?\n\nRecuerda que con tu Tarjeta Digital puedes:\n- Retirar dinero sin tarjeta\n- Enviar dinero o pagar a contactos con PLIN\n- Pagar en bodegas y tiendas con código QR\n- Pagar servicios de luz, agua, teléfono y recargar el saldo de tu celular\n- Enviar dinero a otras de cuentas de Interbank y de otros bancos\n- ¡Y mucho más! Descúbrelo aquí: https://interbank.pe/tarjetas/tarjeta-digital/tarjeta-digital \n\nAntes de despedirnos, te pedimos califiques la experiencia que tuviste con nosotros. Solo escribe el número:\n\n5. Excelente\n4. Muy bueno\n3. Bueno\n2. Malo\n1. Muy malo\n\n${buttonText}"
+          )`;
+        con.query(sql2, function (err, result) {
+          if (err) throw err;
+          console.log('Mensaje guardado: ' + number);
+        });
+        await sleep(2000);
       });
     })
     .start();
@@ -330,13 +429,27 @@ client.on('message', async (msg) => {
     }
   });
   await sleep(2000);
+  const sql2 = `INSERT INTO mensajes (fecha, celular, envio, contenido) VALUES ("${Date.now()}", "${
+    from.split('@')[0]
+  }", ${false}, "${body.replaceAll(/\p{Emoji}/gu, '[-emoji-]')}")`;
+  con.query(sql2, function (err, result) {
+    console.log(err ? err : 'Mensaje guardado: ' + from.split('@')[0]);
+  });
+  await sleep(2000);
   if (body == 'SI' && selectedButtonId == 'boton_si') {
     sendMessage(
       client,
       from,
       '¡Qué bueno que te haya servido la información! 🤩 Si tienes alguna pregunta, escríbenos por este medio.'
     );
-    await sleep(1000);
+    await sleep(2000);
+    const sql2 = `INSERT INTO mensajes (fecha, celular, envio, contenido) VALUES ("${Date.now()}", "${
+      from.split('@')[0]
+    }", ${true}, "¡Qué bueno que te haya servido la información! Si tienes alguna pregunta, escríbenos por este medio.")`;
+    con.query(sql2, function (err, result) {
+      console.log(err ? err : 'Mensaje guardado: ' + from.split('@')[0]);
+    });
+    await sleep(2000);
   }
 
   if (body == 'NO' && selectedButtonId == 'boton_no') {
@@ -345,7 +458,14 @@ client.on('message', async (msg) => {
       from,
       'Lamentamos que la información no haya sito de tu utilidad. 🙁 Si tienes alguna pregunta, escríbenos por este medio.'
     );
-    await sleep(1000);
+    await sleep(2000);
+    const sql2 = `INSERT INTO mensajes (fecha, celular, envio, contenido) VALUES ("${Date.now()}", "${
+      from.split('@')[0]
+    }", ${true}, "Lamentamos que la información no haya sito de tu utilidad. Si tienes alguna pregunta, escríbenos por este medio.")`;
+    con.query(sql2, function (err, result) {
+      console.log(err ? err : 'Mensaje guardado: ' + from.split('@')[0]);
+    });
+    await sleep(2000);
   }
   if (fase == 'Fase9' && ((body >= 1 && body <= 5) || emojis.includes(body))) {
     sendMessage(
@@ -361,6 +481,13 @@ client.on('message', async (msg) => {
     });
     //Se podria cambiar a fase6 para que no envie mensaje si hay un 1---5 o emoji
     await sleep(1000);
+    const sql2 = `INSERT INTO mensajes (fecha, celular, envio, contenido) VALUES ("${Date.now()}", "${
+      from.split('@')[0]
+    }", ${true}, "¡Excelente! te agradeceríamos que nos dejes un comentario para mejorar poco a poco nuestro contenido.")`;
+    con.query(sql2, function (err, result) {
+      console.log(err ? err : 'Mensaje guardado: ' + from.split('@')[0]);
+    });
+    await sleep(2000);
   }
 });
 client.on('authenticated', (session) => {
